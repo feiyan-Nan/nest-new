@@ -37,10 +37,17 @@ export interface ICorsConfig {
   excludePaths?: string[];
 }
 
+export interface ICompressionConfig {
+  enabled: boolean;
+  threshold?: number;
+  brotliQuality?: number;
+}
+
 export interface IConfiguration {
   app: IAppConfig;
   database: IDatabaseConfig;
   jwt: IJwtConfig;
   api: IApiConfig;
   cors: ICorsConfig;
+  compression: ICompressionConfig;
 }

@@ -37,4 +37,13 @@ export default (): IConfiguration => ({
       ? process.env.CORS_EXCLUDE_PATHS.split(',')
       : undefined,
   },
+  compression: {
+    enabled: process.env.COMPRESSION_ENABLED === 'true',
+    threshold: process.env.COMPRESSION_THRESHOLD
+      ? parseInt(process.env.COMPRESSION_THRESHOLD, 10)
+      : 1024,
+    brotliQuality: process.env.COMPRESSION_BROTLI_QUALITY
+      ? parseInt(process.env.COMPRESSION_BROTLI_QUALITY, 10)
+      : 4,
+  },
 });

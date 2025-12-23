@@ -58,4 +58,16 @@ export class AppConfigService {
       }),
     };
   }
+
+  get compression() {
+    return {
+      enabled: this.configService.get('compression.enabled', { infer: true })!,
+      threshold: this.configService.get('compression.threshold', {
+        infer: true,
+      })!,
+      brotliQuality: this.configService.get('compression.brotliQuality', {
+        infer: true,
+      })!,
+    };
+  }
 }
