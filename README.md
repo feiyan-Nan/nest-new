@@ -2,6 +2,9 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
+删除oss: https://help.aliyun.com/zh/oss/developer-reference/nodejs-delete-objects?spm=a2c4g.11186623.help-menu-31815.d_1_1_10_6_2_6.59b74105EUN8yT&scm=20140722.H_111408._.OR_help-T_cn~zh-V_1
+
+
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
