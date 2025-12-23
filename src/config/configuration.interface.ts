@@ -21,9 +21,26 @@ export interface IApiConfig {
   version: string;
 }
 
+export interface ICorsConfig {
+  enabled: boolean;
+  origin: string | string[] | RegExp | RegExp[];
+  methods?: string | string[];
+  allowedHeaders?: string | string[];
+  exposedHeaders?: string | string[];
+  credentials?: boolean;
+  /**
+   * 浏览器可以缓存预检请求（OPTIONS）的结果多长时间
+   * 单位：秒
+   */
+  maxAge?: number;
+  includePaths?: string[];
+  excludePaths?: string[];
+}
+
 export interface IConfiguration {
   app: IAppConfig;
   database: IDatabaseConfig;
   jwt: IJwtConfig;
   api: IApiConfig;
+  cors: ICorsConfig;
 }

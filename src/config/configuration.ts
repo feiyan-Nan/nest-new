@@ -20,4 +20,21 @@ export default (): IConfiguration => ({
     prefix: process.env.API_PREFIX || 'api',
     version: process.env.API_VERSION || 'v1',
   },
+  cors: {
+    enabled: process.env.CORS_ENABLED === 'true',
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+    methods: process.env.CORS_METHODS || 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS || '*',
+    exposedHeaders: process.env.CORS_EXPOSED_HEADERS,
+    credentials: process.env.CORS_CREDENTIALS === 'true',
+    maxAge: process.env.CORS_MAX_AGE
+      ? parseInt(process.env.CORS_MAX_AGE, 10)
+      : 3600,
+    includePaths: process.env.CORS_INCLUDE_PATHS
+      ? process.env.CORS_INCLUDE_PATHS.split(',')
+      : undefined,
+    excludePaths: process.env.CORS_EXCLUDE_PATHS
+      ? process.env.CORS_EXCLUDE_PATHS.split(',')
+      : undefined,
+  },
 });

@@ -36,4 +36,26 @@ export class AppConfigService {
       version: this.configService.get('api.version', { infer: true })!,
     };
   }
+
+  get cors() {
+    return {
+      enabled: this.configService.get('cors.enabled', { infer: true })!,
+      origin: this.configService.get('cors.origin', { infer: true })!,
+      methods: this.configService.get('cors.methods', { infer: true }),
+      allowedHeaders: this.configService.get('cors.allowedHeaders', {
+        infer: true,
+      }),
+      exposedHeaders: this.configService.get('cors.exposedHeaders', {
+        infer: true,
+      }),
+      credentials: this.configService.get('cors.credentials', { infer: true }),
+      maxAge: this.configService.get('cors.maxAge', { infer: true }),
+      includePaths: this.configService.get('cors.includePaths', {
+        infer: true,
+      }),
+      excludePaths: this.configService.get('cors.excludePaths', {
+        infer: true,
+      }),
+    };
+  }
 }
