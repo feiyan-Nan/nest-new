@@ -1,4 +1,4 @@
-import { IConfiguration } from './configuration.interface';
+import { DatabaseType, IConfiguration } from './configuration.interface';
 
 export default (): IConfiguration => ({
   app: {
@@ -6,11 +6,15 @@ export default (): IConfiguration => ({
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
   },
   database: {
+    type: (process.env.DB_TYPE as DatabaseType) || 'mysql',
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
+    username: process.env.DB_USERNAME || 'root',
+    password: process.env.DB_PASSWORD || '',
     database: process.env.DB_DATABASE || 'nest_db',
+    synchronize: process.env.DB_SYNCHRONIZE === 'true',
+    logging: process.env.DB_LOGGING === 'true',
+    migrationsPath: process.env.DB_MIGRATIONS_PATH || 'src/database/migrations',
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'default-secret-key-change-in-production',

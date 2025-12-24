@@ -3,12 +3,24 @@ export interface IAppConfig {
   port: number;
 }
 
+export type DatabaseType =
+  | 'mysql'
+  | 'postgres'
+  | 'sqlite'
+  | 'mariadb'
+  | 'mssql'
+  | 'oracle';
+
 export interface IDatabaseConfig {
+  type: DatabaseType;
   host: string;
   port: number;
   username: string;
   password: string;
   database: string;
+  synchronize: boolean;
+  logging: boolean;
+  migrationsPath: string;
 }
 
 export interface IJwtConfig {

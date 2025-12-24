@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IConfiguration } from './configuration.interface';
+import { IDatabaseConfig, IConfiguration } from './configuration.interface';
 
 @Injectable()
 export class AppConfigService {
@@ -13,13 +13,21 @@ export class AppConfigService {
     };
   }
 
-  get database() {
+  get database(): IDatabaseConfig {
     return {
+      type: this.configService.get('database.type', { infer: true })!,
       host: this.configService.get('database.host', { infer: true })!,
       port: this.configService.get('database.port', { infer: true })!,
       username: this.configService.get('database.username', { infer: true })!,
       password: this.configService.get('database.password', { infer: true })!,
       database: this.configService.get('database.database', { infer: true })!,
+      synchronize: this.configService.get('database.synchronize', {
+        infer: true,
+      })!,
+      logging: this.configService.get('database.logging', { infer: true })!,
+      migrationsPath: this.configService.get('database.migrationsPath', {
+        infer: true,
+      })!,
     };
   }
 
