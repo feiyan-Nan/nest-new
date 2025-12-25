@@ -11,8 +11,13 @@ import { IUser } from './user.interface';
 
 @Entity('users')
 export class User implements IUser {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn({
+    type: 'int',
+    comment: '主键ID',
+    unsigned: true,
+    name: 'id',
+  })
+  id: number;
 
   @Column({ length: 100, unique: true })
   email: string;

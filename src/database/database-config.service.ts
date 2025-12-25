@@ -17,7 +17,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       database: config.database,
       synchronize: config.synchronize,
       logging: config.logging,
-      autoLoadEntities: true,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       migrations: [config.migrationsPath],
     };
   }
