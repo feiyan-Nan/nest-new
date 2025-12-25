@@ -1,33 +1,27 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Injectable } from '@nestjs/common';
+import { WinstonLoggerService } from './winston-logger.service';
 
 @Injectable()
 export class LoggerDemoService {
-  constructor(
-    @Inject(WINSTON_MODULE_PROVIDER)
-    private readonly logger: Logger,
-  ) {}
+  private readonly context = LoggerDemoService.name;
+
+  constructor(private readonly logger: WinstonLoggerService) {}
 
   demonstrateLevels() {
-    this.logger.debug('Debug log message', {
-      context: LoggerDemoService.name,
+    this.logger.debug('Debug log message', this.context, {
       userId: 123,
       action: 'demonstrateLevels',
     });
 
-    this.logger.info('Info log message', {
-      context: LoggerDemoService.name,
-      requestId: 'req-456',
+    this.logger.log('Info log message', this.context, {
+      requestId: this.logger.getRequestId(),
     });
 
-    this.logger.warn('Warning log message', {
-      context: LoggerDemoService.name,
+    this.logger.warn('Warning log message', this.context, {
       warning: 'This is a warning',
     });
 
-    this.logger.error('Error log message', {
-      context: LoggerDemoService.name,
+    this.logger.error('Error log message', this.context, {
       error: 'Something went wrong',
       stack: new Error().stack,
     });
@@ -38,15 +32,14 @@ export class LoggerDemoService {
     const userName = 'John Doe';
     const action = 'login';
 
-    this.logger.info('User login', {
-      context: LoggerDemoService.name,
+    this.logger.log('User login', this.context, {
       userId,
       userName,
       action,
       timestamp: new Date().toISOString(),
       metadata: {
-        ip: '192.168.1.1',
-        userAgent: 'Mozilla/5.0',
+        ip: this.logger.getRequestContext('ip'),
+        userAgent: this.logger.getRequestContext('userAgent'),
       },
     });
   }
@@ -59,8 +52,7 @@ export class LoggerDemoService {
         error instanceof Error ? error.message : 'Unknown error';
       const errorStack = error instanceof Error ? error.stack : undefined;
 
-      this.logger.error('Caught an error', {
-        context: LoggerDemoService.name,
+      this.logger.error('Caught an error', this.context, {
         errorMessage1: errorMessage,
         errorStack,
         additionalInfo: {
@@ -71,22 +63,15 @@ export class LoggerDemoService {
     }
   }
 
-  demonstrateChildLogger() {
-    const requestLogger = this.logger.child({
-      context: LoggerDemoService.name,
-    });
+  demonstrateRequestTracking() {
+    const requestId = this.logger.getRequestId();
+    const ip = this.logger.getRequestContext('ip');
+    const userAgent = this.logger.getRequestContext('userAgent');
 
-    requestLogger.info('Processing user request', {
-      requestId: 'req-789',
-      userId: 555,
-    });
-
-    requestLogger.info('Request validated', {
-      context: LoggerDemoService.name,
-    });
-
-    requestLogger.info('Request completed', {
-      context: LoggerDemoService.name,
+    this.logger.log('Request tracking info', this.context, {
+      requestId,
+      ip,
+      userAgent,
     });
   }
 }

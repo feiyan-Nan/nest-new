@@ -7,17 +7,25 @@ import {
 
 const logDir = path.join(process.cwd(), 'logs');
 
+const requestIdFormat = winston.format((info) => {
+  if (info.requestId) {
+    info.message = `[${info.requestId}] ${info.message}`;
+  }
+  return info;
+});
+
 export const winstonConfig: WinstonModuleOptions = {
   transports: [
     new winston.transports.Console({
       level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
       format: winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
         winston.format.ms(),
+        requestIdFormat(),
         nestWinstonModuleUtilities.format.nestLike('NestApp', {
           colors: true,
           prettyPrint: true,
-          processId: true,
+          processId: false,
           appName: true,
         }),
       ),

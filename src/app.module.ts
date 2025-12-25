@@ -1,4 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { ClsModule } from 'nestjs-cls';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { AppConfigModule } from '@/config/config.module';
@@ -10,6 +11,23 @@ import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 
 @Module({
   imports: [
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        generateId: true,
+        idGenerator: (req) => {
+          return (
+            req.headers['x-request-id'] ||
+            `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`
+          );
+        },
+        setup: (cls, req) => {
+          cls.set('ip', req.ip || req.connection.remoteAddress);
+          cls.set('userAgent', req.headers['user-agent']);
+        },
+      },
+    }),
     AppConfigModule,
     LoggerModule,
     DatabaseModule,

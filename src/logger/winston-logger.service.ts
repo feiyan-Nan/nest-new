@@ -1,49 +1,61 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { ClsService } from 'nestjs-cls';
 import { Logger } from 'winston';
+import { RequestClsStore } from './types/cls-store.interface';
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class WinstonLoggerService {
-  private contextLogger: Logger;
-  private context: string = 'Application';
-
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
-  ) {
-    this.contextLogger = this.logger;
+    private readonly cls: ClsService<RequestClsStore>,
+  ) {}
+
+  private getContextLogger(context?: string): Logger {
+    const requestId = this.cls.getId();
+    return this.logger.child({
+      context,
+      requestId,
+    });
   }
 
-  setContext(context: string) {
-    this.context = context;
-    this.contextLogger = this.logger.child({ context });
+  log(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).info(message, meta);
   }
 
-  log(message: string, meta?: Record<string, any>) {
-    this.contextLogger.info(message, meta);
+  error(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).error(message, meta);
   }
 
-  error(message: string, meta?: Record<string, any>) {
-    this.contextLogger.error(message, meta);
+  warn(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).warn(message, meta);
   }
 
-  warn(message: string, meta?: Record<string, any>) {
-    this.contextLogger.warn(message, meta);
+  debug(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).debug(message, meta);
   }
 
-  debug(message: string, meta?: Record<string, any>) {
-    this.contextLogger.debug(message, meta);
+  verbose(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).verbose(message, meta);
   }
 
-  verbose(message: string, meta?: Record<string, any>) {
-    this.contextLogger.verbose(message, meta);
+  http(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).http(message, meta);
   }
 
-  http(message: string, meta?: Record<string, any>) {
-    this.contextLogger.http(message, meta);
+  silly(message: string, context?: string, meta?: Record<string, any>) {
+    this.getContextLogger(context).silly(message, meta);
   }
 
-  silly(message: string, meta?: Record<string, any>) {
-    this.contextLogger.silly(message, meta);
+  getRequestId(): string | undefined {
+    return this.cls.getId();
+  }
+
+  getRequestContext<K extends keyof RequestClsStore>(
+    key: K,
+  ): RequestClsStore[K] | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.cls.get(key) as RequestClsStore[K] | undefined;
   }
 }
