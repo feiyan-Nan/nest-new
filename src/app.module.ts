@@ -4,10 +4,18 @@ import { AppService } from '@/app.service';
 import { AppConfigModule } from '@/config/config.module';
 import { ProvidersModule } from '@/examples/providers-demo.module';
 import { DatabaseModule } from '@/database/database.module';
+import { LoggerModule } from '@/logger';
+import { LoggerDemoModule } from '@/logger/logger-demo.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 
 @Module({
-  imports: [AppConfigModule, DatabaseModule, ProvidersModule],
+  imports: [
+    AppConfigModule,
+    LoggerModule,
+    DatabaseModule,
+    ProvidersModule,
+    LoggerDemoModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
