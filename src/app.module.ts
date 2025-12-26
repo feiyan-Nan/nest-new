@@ -1,6 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ClsModule } from 'nestjs-cls';
+import { ClsModule, ClsService, ClsStore } from 'nestjs-cls';
+import { Request } from 'express';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { AppConfigModule } from '@/config/config.module';
@@ -18,15 +19,15 @@ import { TransformInterceptor } from '@/common/interceptors/transform.intercepto
       middleware: {
         mount: true,
         generateId: true,
-        idGenerator: (req) => {
-          return (
-            req.headers['x-request-id'] ||
-            `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`
-          );
+        idGenerator: (req: Request): string => {
+          const requestId = req.headers['x-request-id'];
+          return typeof requestId === 'string'
+            ? requestId
+            : `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
         },
-        setup: (cls, req) => {
-          cls.set('ip', req.ip || req.connection.remoteAddress);
-          cls.set('userAgent', req.headers['user-agent']);
+        setup: (cls: ClsService<ClsStore>, req: Request) => {
+          cls.set('ip', req.ip || req.socket?.remoteAddress || '');
+          cls.set('userAgent', req.headers['user-agent'] || '');
         },
       },
     }),
