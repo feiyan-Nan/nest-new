@@ -14,6 +14,7 @@ import { ProvidersModule } from '@/examples/providers-demo.module';
 import { DatabaseModule } from '@/database/database.module';
 import { LoggerModule } from '@/logger';
 import { LoggerDemoModule } from '@/logger/logger-demo.module';
+import { HealthModule } from '@/health/health.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -40,6 +41,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
     AppConfigModule,
     LoggerModule,
     DatabaseModule,
+    HealthModule,
     ProvidersModule,
     LoggerDemoModule,
   ],

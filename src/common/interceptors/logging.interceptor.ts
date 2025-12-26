@@ -19,6 +19,11 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const method = request.method;
     const url = request.url;
+
+    // 排除健康检查路径，不记录日志
+    if (url.startsWith('/health')) {
+      return next.handle();
+    }
     const headers = (request.headers as Record<string, string>) || {};
     const body = (request.body as Record<string, unknown>) || {};
     const query = (request.query as Record<string, unknown>) || {};
