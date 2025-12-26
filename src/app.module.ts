@@ -16,6 +16,7 @@ import { LoggerModule } from '@/logger';
 import { LoggerDemoModule } from '@/logger/logger-demo.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
+import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -45,6 +46,10 @@ import { TransformInterceptor } from '@/common/interceptors/transform.intercepto
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
