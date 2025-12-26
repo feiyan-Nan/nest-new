@@ -36,8 +36,13 @@ async function bootstrap() {
   logger.log(`Application is running on: http://localhost:${port}`);
 }
 
-bootstrap().catch((error) => {
-  if (error.code === 'EADDRINUSE') {
+bootstrap().catch((error: unknown) => {
+  if (
+    error &&
+    typeof error === 'object' &&
+    'code' in error &&
+    error.code === 'EADDRINUSE'
+  ) {
     console.error('\n❌ Port is already in use!');
     console.error('💡 Run: pnpm run shut\n');
   } else {
