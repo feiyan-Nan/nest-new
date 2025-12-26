@@ -5,6 +5,8 @@ import { constants } from 'node:zlib';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from '@/app.module';
 import { AppConfigService } from '@/config/app-config.service';
+import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +14,9 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  const winstonLoggerService = app.get(WinstonLoggerService);
+  app.useGlobalFilters(new HttpExceptionFilter(winstonLoggerService));
 
   const configService = app.get(AppConfigService);
   const { port } = configService.app;
