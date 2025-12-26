@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "shut": "lsof -ti :8080 | xargs kill -9"
+    "shut": "lsof -ti :3000 | xargs kill -9"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

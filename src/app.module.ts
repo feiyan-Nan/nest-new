@@ -1,4 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClsModule } from 'nestjs-cls';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
@@ -8,6 +9,7 @@ import { DatabaseModule } from '@/database/database.module';
 import { LoggerModule } from '@/logger';
 import { LoggerDemoModule } from '@/logger/logger-demo.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
+import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 
 @Module({
   imports: [
@@ -35,7 +37,13 @@ import { CorsMiddleware } from '@/common/middleware/cors.middleware';
     LoggerDemoModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
