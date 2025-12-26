@@ -9,7 +9,12 @@ const logDir = path.join(process.cwd(), 'logs');
 
 const requestIdFormat = winston.format((info) => {
   if (info.requestId) {
-    info.message = `[${info.requestId}] ${info.message}`;
+    const requestId =
+      typeof info.requestId === 'string' || typeof info.requestId === 'number'
+        ? String(info.requestId)
+        : '';
+    const message = String(info.message);
+    info.message = `[${requestId}] ${message}`;
   }
   return info;
 });

@@ -1,4 +1,9 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClsModule, ClsService, ClsStore } from 'nestjs-cls';
 import { Request } from 'express';
@@ -40,6 +45,10 @@ import { TransformInterceptor } from '@/common/interceptors/transform.intercepto
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
