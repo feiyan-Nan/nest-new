@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import type { LoggerService } from '@nestjs/common';
+import { LoggerService, VersioningType } from '@nestjs/common';
 import compression from 'compression';
 import { constants } from 'node:zlib';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
@@ -34,6 +34,14 @@ async function bootstrap() {
       }),
     );
   }
+
+  // Set global prefix
+  app.setGlobalPrefix('api');
+
+  // Enable URI Versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   await app.listen(port);
 
