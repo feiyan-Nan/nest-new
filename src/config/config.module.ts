@@ -1,17 +1,30 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { AppConfigService } from './app-config.service';
-import configuration from './configuration';
+import {
+  appConfig,
+  databaseConfig,
+  jwtConfig,
+  apiConfig,
+  corsConfig,
+  compressionConfig,
+  scheduleConfig,
+} from './configs';
 
 @Global()
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      isGlobal: true,
-      load: [configuration],
-      envFilePath: '.env',
+      load: [
+        appConfig,
+        databaseConfig,
+        jwtConfig,
+        apiConfig,
+        corsConfig,
+        compressionConfig,
+        scheduleConfig,
+      ],
       cache: true,
-      expandVariables: true,
     }),
   ],
   providers: [AppConfigService],

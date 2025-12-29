@@ -1,0 +1,54 @@
+# 应用配置
+app:
+  env: development        # 环境：development, production, test
+  port: 3000             # 端口号
+
+# 数据库配置
+database:
+  type: mysql            # 数据库类型：mysql, postgres, sqlite, mariadb, mssql, oracle
+  host: localhost        # 数据库主机
+  port: 3306            # 数据库端口
+  username: root        # 数据库用户名
+  password: ''          # 数据库密码
+  name: nest_db         # 数据库名称
+  sync: false           # 是否自动同步表结构（生产环境建议 false）
+  logging: false        # 是否开启 SQL 日志
+  migrations: src/database/migrations  # 迁移文件路径
+
+# JWT 配置
+jwt:
+  secret: your-secret-key-change-in-production  # JWT 密钥（生产环境必须修改）
+  expires: 7d           # 过期时间：7d, 1h, 30m 等
+
+# API 配置
+api:
+  prefix: api           # API 前缀
+  version: v1           # API 版本
+
+# CORS 配置
+cors:
+  enabled: true         # 是否启用 CORS
+  origin:               # 允许的源（可以是字符串或数组）
+    - http://localhost:3000
+    - http://localhost:4200
+  methods: GET,HEAD,PUT,PATCH,POST,DELETE  # 允许的方法
+  headers: '*'          # 允许的请求头
+  credentials: true     # 是否允许携带凭证
+  maxAge: 3600         # 预检请求缓存时间（秒）
+
+# 压缩配置
+compression:
+  enabled: false        # 是否启用压缩
+  threshold: 1024       # 压缩阈值（字节）
+  quality: 4            # Brotli 压缩质量（0-11）
+
+# 定时任务配置
+schedule:
+  enabled: true         # 是否启用定时任务
+  cleanup:              # 日志清理任务
+    enabled: true       # 是否启用
+    cron: '0 0 * * *'   # 执行时间（每天凌晨）
+    retention: 30       # 日志保留天数
+  health:               # 健康检查任务
+    enabled: true       # 是否启用
+    cron: '0 * * * *'   # 执行时间（每小时）

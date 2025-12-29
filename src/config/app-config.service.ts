@@ -1,107 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IDatabaseConfig, IConfiguration } from './configuration.interface';
+import {
+  IAppConfig,
+  IDatabaseConfig,
+  IJwtConfig,
+  IApiConfig,
+  ICorsConfig,
+  ICompressionConfig,
+  IScheduleConfig,
+} from './configs';
 
 @Injectable()
 export class AppConfigService {
-  constructor(private configService: ConfigService<IConfiguration>) {}
+  constructor(private configService: ConfigService) {}
 
-  get app() {
-    return {
-      nodeEnv: this.configService.get('app.nodeEnv', { infer: true })!,
-      port: this.configService.get('app.port', { infer: true })!,
-    };
+  get app(): IAppConfig {
+    return this.configService.get<IAppConfig>('app')!;
   }
 
   get database(): IDatabaseConfig {
-    return {
-      type: this.configService.get('database.type', { infer: true })!,
-      host: this.configService.get('database.host', { infer: true })!,
-      port: this.configService.get('database.port', { infer: true })!,
-      username: this.configService.get('database.username', { infer: true })!,
-      password: this.configService.get('database.password', { infer: true })!,
-      database: this.configService.get('database.database', { infer: true })!,
-      synchronize: this.configService.get('database.synchronize', {
-        infer: true,
-      })!,
-      logging: this.configService.get('database.logging', { infer: true })!,
-      migrationsPath: this.configService.get('database.migrationsPath', {
-        infer: true,
-      })!,
-    };
+    return this.configService.get<IDatabaseConfig>('database')!;
   }
 
-  get jwt() {
-    return {
-      secret: this.configService.get('jwt.secret', { infer: true })!,
-      expiresIn: this.configService.get('jwt.expiresIn', { infer: true })!,
-    };
+  get jwt(): IJwtConfig {
+    return this.configService.get<IJwtConfig>('jwt')!;
   }
 
-  get api() {
-    return {
-      prefix: this.configService.get('api.prefix', { infer: true })!,
-      version: this.configService.get('api.version', { infer: true })!,
-    };
+  get api(): IApiConfig {
+    return this.configService.get<IApiConfig>('api')!;
   }
 
-  get cors() {
-    return {
-      enabled: this.configService.get('cors.enabled', { infer: true })!,
-      origin: this.configService.get('cors.origin', { infer: true })!,
-      methods: this.configService.get('cors.methods', { infer: true }),
-      allowedHeaders: this.configService.get('cors.allowedHeaders', {
-        infer: true,
-      }),
-      exposedHeaders: this.configService.get('cors.exposedHeaders', {
-        infer: true,
-      }),
-      credentials: this.configService.get('cors.credentials', { infer: true }),
-      maxAge: this.configService.get('cors.maxAge', { infer: true }),
-      includePaths: this.configService.get('cors.includePaths', {
-        infer: true,
-      }),
-      excludePaths: this.configService.get('cors.excludePaths', {
-        infer: true,
-      }),
-    };
+  get cors(): ICorsConfig {
+    return this.configService.get<ICorsConfig>('cors')!;
   }
 
-  get compression() {
-    return {
-      enabled: this.configService.get('compression.enabled', { infer: true })!,
-      threshold: this.configService.get('compression.threshold', {
-        infer: true,
-      })!,
-      brotliQuality: this.configService.get('compression.brotliQuality', {
-        infer: true,
-      })!,
-    };
+  get compression(): ICompressionConfig {
+    return this.configService.get<ICompressionConfig>('compression')!;
   }
 
-  get schedule() {
-    return {
-      enabled: this.configService.get('schedule.enabled', { infer: true })!,
-      cleanupLogs: {
-        enabled: this.configService.get('schedule.cleanupLogs.enabled', {
-          infer: true,
-        })!,
-        cron: this.configService.get('schedule.cleanupLogs.cron', {
-          infer: true,
-        })!,
-        retentionDays: this.configService.get(
-          'schedule.cleanupLogs.retentionDays',
-          { infer: true },
-        )!,
-      },
-      healthCheck: {
-        enabled: this.configService.get('schedule.healthCheck.enabled', {
-          infer: true,
-        })!,
-        cron: this.configService.get('schedule.healthCheck.cron', {
-          infer: true,
-        })!,
-      },
-    };
+  get schedule(): IScheduleConfig {
+    return this.configService.get<IScheduleConfig>('schedule')!;
   }
 }

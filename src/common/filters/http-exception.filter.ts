@@ -94,7 +94,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
 
       // Handle specific database errors
-      const driverError = exception.driverError as any;
+      const driverError = exception.driverError;
       if (driverError?.code === 'ER_DUP_ENTRY') {
         statusCode = HttpStatus.CONFLICT;
         message = 'Duplicate entry detected';
@@ -196,7 +196,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return {
         name: exception.name,
         message: exception.message,
-        stack: process.env.NODE_ENV === 'development' ? exception.stack : undefined,
+        stack:
+          process.env.NODE_ENV === 'development' ? exception.stack : undefined,
       };
     }
 
