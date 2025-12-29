@@ -16,12 +16,12 @@ export class AppController {
 
   @Get('config')
   getConfig(): Record<string, unknown> {
-    const { port, nodeEnv } = this.configService.app;
+    const { port, env } = this.configService.app;
     const { prefix, version } = this.configService.api;
 
     return {
       port,
-      nodeEnv,
+      env,
       apiPrefix: prefix,
       apiVersion: version,
     };

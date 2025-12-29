@@ -2,14 +2,14 @@ import { registerAs } from '@nestjs/config';
 import { getConfig } from '../yaml-loader';
 
 export interface IAppConfig {
-  nodeEnv: string;
+  env: string;
   port: number;
 }
 
 export default registerAs(
   'app',
   (): IAppConfig => ({
-    nodeEnv: getConfig<string>('app.env', 'development'),
+    env: getConfig<string>('app.env', 'development'),
     port: getConfig<number>('app.port', 3000),
   }),
 );
