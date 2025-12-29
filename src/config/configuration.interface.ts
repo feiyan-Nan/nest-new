@@ -55,6 +55,19 @@ export interface ICompressionConfig {
   brotliQuality?: number;
 }
 
+export interface IScheduleConfig {
+  enabled: boolean;
+  cleanupLogs: {
+    enabled: boolean;
+    cron: string;
+    retentionDays: number;
+  };
+  healthCheck: {
+    enabled: boolean;
+    cron: string;
+  };
+}
+
 export interface IConfiguration {
   app: IAppConfig;
   database: IDatabaseConfig;
@@ -62,4 +75,5 @@ export interface IConfiguration {
   api: IApiConfig;
   cors: ICorsConfig;
   compression: ICompressionConfig;
+  schedule: IScheduleConfig;
 }

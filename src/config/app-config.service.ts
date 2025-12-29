@@ -78,4 +78,30 @@ export class AppConfigService {
       })!,
     };
   }
+
+  get schedule() {
+    return {
+      enabled: this.configService.get('schedule.enabled', { infer: true })!,
+      cleanupLogs: {
+        enabled: this.configService.get('schedule.cleanupLogs.enabled', {
+          infer: true,
+        })!,
+        cron: this.configService.get('schedule.cleanupLogs.cron', {
+          infer: true,
+        })!,
+        retentionDays: this.configService.get(
+          'schedule.cleanupLogs.retentionDays',
+          { infer: true },
+        )!,
+      },
+      healthCheck: {
+        enabled: this.configService.get('schedule.healthCheck.enabled', {
+          infer: true,
+        })!,
+        cron: this.configService.get('schedule.healthCheck.cron', {
+          infer: true,
+        })!,
+      },
+    };
+  }
 }

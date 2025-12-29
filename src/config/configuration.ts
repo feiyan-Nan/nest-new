@@ -50,4 +50,18 @@ export default (): IConfiguration => ({
       ? parseInt(process.env.COMPRESSION_BROTLI_QUALITY, 10)
       : 4,
   },
+  schedule: {
+    enabled: process.env.SCHEDULE_ENABLED !== 'false',
+    cleanupLogs: {
+      enabled: process.env.SCHEDULE_CLEANUP_LOGS_ENABLED !== 'false',
+      cron: process.env.SCHEDULE_CLEANUP_LOGS_CRON || '0 0 * * *',
+      retentionDays: process.env.SCHEDULE_CLEANUP_LOGS_RETENTION_DAYS
+        ? parseInt(process.env.SCHEDULE_CLEANUP_LOGS_RETENTION_DAYS, 10)
+        : 30,
+    },
+    healthCheck: {
+      enabled: process.env.SCHEDULE_HEALTH_CHECK_ENABLED !== 'false',
+      cron: process.env.SCHEDULE_HEALTH_CHECK_CRON || '0 * * * *',
+    },
+  },
 });

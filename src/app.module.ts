@@ -15,6 +15,7 @@ import { DatabaseModule } from '@/database/database.module';
 import { LoggerModule } from '@/logger';
 import { LoggerDemoModule } from '@/logger/logger-demo.module';
 import { HealthModule } from '@/health/health.module';
+import { ScheduleTasksModule } from '@/schedule/schedule.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -44,6 +45,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
     HealthModule,
     ProvidersModule,
     LoggerDemoModule,
+    ScheduleTasksModule,
   ],
   controllers: [AppController],
   providers: [
