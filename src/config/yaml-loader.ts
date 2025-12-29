@@ -1,45 +1,79 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import * as yaml from 'js-yaml';
+import merge from 'lodash.merge';
 
 type ConfigValue = Record<string, unknown>;
 
 let config: ConfigValue | null = null;
 
 /**
- * 获取配置文件路径
+ * 加载单个 YAML 配置文件
+ * @param filePath 文件路径
+ * @returns 配置对象，如果文件不存在则返回 null
  */
-function getConfigPath(): string {
-  const env = process.env.RUNNING_ENV;
-  const cwd = process.cwd();
-
-  // 如果设置了 RUNNING_ENV，尝试加载对应的配置文件
-  if (env) {
-    const envConfigPath = join(cwd, `config.${env}.yml`);
-    if (existsSync(envConfigPath)) {
-      console.log(`Loading config from: config.${env}.yml`);
-      return envConfigPath;
-    }
-    console.warn(
-      `Config file config.${env}.yml not found, falling back to config.yml`,
-    );
+function loadYamlFile(filePath: string): ConfigValue | null {
+  if (!existsSync(filePath)) {
+    return null;
   }
 
-  // 默认配置文件
-  const defaultPath = join(cwd, 'config.yml');
-  console.log('Loading config from: config.yml');
-  return defaultPath;
+  const fileContents = readFileSync(filePath, 'utf8');
+  return yaml.load(fileContents) as ConfigValue;
 }
 
 /**
- * 加载 YAML 配置文件
+ * 获取配置文件路径
+ * 默认使用 development 环境，可通过 RUNNING_ENV 环境变量指定
+ */
+function getConfigPath(): string {
+  const env = process.env.RUNNING_ENV || 'development';
+  const cwd = process.cwd();
+  const envConfigPath = join(cwd, `config.${env}.yml`);
+
+  if (existsSync(envConfigPath)) {
+    console.log(`Loading config from: config.${env}.yml`);
+    return envConfigPath;
+  }
+
+  throw new Error(
+    `Configuration file 'config.${env}.yml' not found.\n` +
+      `Please create it or check your RUNNING_ENV environment variable.\n` +
+      `Available environments: development, production, test`,
+  );
+}
+
+/**
+ * 加载 YAML 配置文件（支持公共配置合并）
+ * 使用 lodash.merge 进行深度合并，支持数组深度合并
  */
 export function loadYaml(): ConfigValue {
   if (config) return config;
 
+  const cwd = process.cwd();
+  const commonConfigPath = join(cwd, 'config.common.yml');
+
+  // 加载公共配置
+  const commonConfig = loadYamlFile(commonConfigPath);
+  if (commonConfig) {
+    console.log('Loading common config from: config.common.yml');
+  }
+
+  // 加载环境配置
   const configPath = getConfigPath();
-  const fileContents = readFileSync(configPath, 'utf8');
-  config = yaml.load(fileContents) as ConfigValue;
+  const envConfig = loadYamlFile(configPath);
+
+  // 使用 lodash.merge 合并配置：环境配置会覆盖公共配置
+  if (commonConfig && envConfig) {
+    config = merge({}, commonConfig, envConfig);
+    console.log('Merged common config with environment config');
+  } else if (envConfig) {
+    config = envConfig;
+  } else if (commonConfig) {
+    config = commonConfig;
+  } else {
+    throw new Error('No configuration file found');
+  }
+
   return config;
 }
 

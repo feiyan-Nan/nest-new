@@ -47,38 +47,87 @@ src/
 
 ## 配置说明
 
-项目采用 YAML 配置文件，每个配置类型都有独立的配置模块：
+项目采用 YAML 配置文件，支持公共配置和环境特定配置的合并机制：
 
 ### 配置文件
-- **主配置文件**: `config.yml` - 项目实际使用的配置（不提交到 git）
-- **示例配置**: `config.example.yml` - 配置文件模板，带完整注释
-- **多环境配置**:
+- **公共配置**: `config.common.yml` - 所有环境共享的配置（提交到 git）
+- **示例配置**: `config.example.yml` - 配置文件模板，带完整注释（提交到 git）
+- **环境配置**（不提交到 git，包含敏感信息）:
   - `config.development.yml` - 开发环境配置
   - `config.production.yml` - 生产环境配置
   - `config.test.yml` - 测试环境配置
 
+### 配置合并机制
+
+**配置加载优先级**（后者覆盖前者）：
+1. 首先加载 `config.common.yml`（公共配置）
+2. 然后加载环境特定配置并合并（如 `config.development.yml`）
+3. 环境配置中的值会覆盖公共配置中的同名配置
+
+**示例**：
+```yaml
+# config.common.yml（公共配置）
+api:
+  prefix: api
+  version: v1
+
+database:
+  type: mysql
+  port: 3306
+
+# config.development.yml（开发环境配置）
+database:
+  host: localhost
+  username: root
+  password: dev123
+
+# 最终合并结果
+database:
+  type: mysql          # 来自 common
+  port: 3306          # 来自 common
+  host: localhost     # 来自 development
+  username: root      # 来自 development
+  password: dev123    # 来自 development
+```
+
 ### 多环境配置
-项目支持根据 `RUNNING_ENV` 环境变量加载不同的配置文件：
 
-1. **环境变量**: 通过 `RUNNING_ENV` 指定运行环境（development/production/test）
-2. **配置文件优先级**:
-   - 如果设置了 `RUNNING_ENV`，优先加载 `config.{RUNNING_ENV}.yml`
-   - 如果对应环境配置文件不存在，回退到 `config.yml`
-   - 如果未设置 `RUNNING_ENV`，使用默认的 `config.yml`
+**默认环境**：如果未设置 `RUNNING_ENV` 环境变量，系统默认使用 `development` 环境。
 
-3. **package.json 命令已自动配置**:
-   - `pnpm start:dev` - 使用 `RUNNING_ENV=development`
-   - `pnpm start:prod` - 使用 `RUNNING_ENV=production`
-   - `pnpm test` - 使用 `RUNNING_ENV=test`
+**环境变量**：通过 `RUNNING_ENV` 指定运行环境（development/production/test）
 
-4. **创建环境配置文件**:
-   ```bash
-   # 复制示例配置文件创建不同环境的配置
-   cp config.example.yml config.development.yml
-   cp config.example.yml config.production.yml
-   cp config.example.yml config.test.yml
-   # 然后根据不同环境修改对应配置文件
-   ```
+**配置文件加载顺序**:
+1. 首先加载 `config.common.yml`（公共配置，如果存在）
+2. 然后加载 `config.${RUNNING_ENV}.yml`（环境配置）并与公共配置合并
+3. 如果对应的环境配置文件不存在，系统会抛出错误并提示创建
+
+**package.json 命令已自动配置**:
+- `pnpm start:dev` - 使用 `RUNNING_ENV=development`
+- `pnpm start:prod` - 使用 `RUNNING_ENV=production`
+- `pnpm test` - 使用 `RUNNING_ENV=test`
+
+**首次使用**:
+```bash
+# 1. 复制示例配置创建开发环境配置
+cp config.example.yml config.development.yml
+
+# 2. 修改 config.development.yml 中的配置项（如数据库密码等）
+
+# 3. 启动应用（会自动使用 development 环境）
+pnpm start:dev
+```
+
+**生产环境部署**:
+```bash
+# 1. 创建生产环境配置（或通过 CI/CD 自动生成）
+cp config.example.yml config.production.yml
+
+# 2. 修改生产环境的敏感配置
+vim config.production.yml
+
+# 3. 部署时设置环境变量
+RUNNING_ENV=production pnpm start:prod
+```
 
 ### 配置结构（简化的 key 名称）
 ```yaml
@@ -138,13 +187,8 @@ const port = this.configService.app.port;
 const dbConfig = this.configService.database;
 ```
 
-### 首次使用
-1. 复制 `config.example.yml` 为 `config.yml`
-2. 修改 `config.yml` 中的配置项
-3. 启动应用
-
 ### 添加新配置
-1. 在 `config.yml` 中添加新的配置项
+1. 在 `config.common.yml` 或环境配置文件中添加新的配置项
 2. 在 `src/config/configs/` 下创建对应的配置文件
 3. 使用 `getConfig('path.to.config', defaultValue)` 读取配置
 4. 在 `src/config/configs/index.ts` 中导出

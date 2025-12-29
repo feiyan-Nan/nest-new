@@ -1,4 +1,4 @@
-# 应用配置
+# 应用配置的完整的配置项示例文件
 app:
   env: development        # 环境：development, production, test
   port: 3000             # 端口号
