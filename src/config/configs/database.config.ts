@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export type DatabaseType =
   | 'mysql'
@@ -21,20 +21,18 @@ export interface IDatabaseConfig {
   migrationsPath: string;
 }
 
-export default registerAs(
-  'database',
-  (): IDatabaseConfig => ({
-    type: getConfig<DatabaseType>('database.type', 'mysql'),
-    host: getConfig<string>('database.host', 'localhost'),
-    port: getConfig<number>('database.port', 3306),
-    username: getConfig<string>('database.username', 'root'),
-    password: getConfig<string>('database.password', ''),
-    database: getConfig<string>('database.name', 'nest_db'),
-    synchronize: getConfig<boolean>('database.sync', false),
-    logging: getConfig<boolean>('database.logging', false),
-    migrationsPath: getConfig<string>(
-      'database.migrations',
-      'src/database/migrations',
-    ),
-  }),
-);
+export default registerAs('database', (): IDatabaseConfig => {
+  const getDbConfig = createNamespaceConfig('database');
+
+  return {
+    type: getDbConfig<DatabaseType>('type', 'mysql'),
+    host: getDbConfig<string>('host', 'localhost'),
+    port: getDbConfig<number>('port', 3306),
+    username: getDbConfig<string>('username', 'root'),
+    password: getDbConfig<string>('password', ''),
+    database: getDbConfig<string>('name', 'nest_db'),
+    synchronize: getDbConfig<boolean>('sync', false),
+    logging: getDbConfig<boolean>('logging', false),
+    migrationsPath: getDbConfig<string>('migrations', 'src/database/migrations'),
+  };
+});

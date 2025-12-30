@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export interface IScheduleConfig {
   enabled: boolean;
@@ -14,18 +14,19 @@ export interface IScheduleConfig {
   };
 }
 
-export default registerAs(
-  'schedule',
-  (): IScheduleConfig => ({
-    enabled: getConfig<boolean>('schedule.enabled', true),
+export default registerAs('schedule', (): IScheduleConfig => {
+  const getScheduleConfig = createNamespaceConfig('schedule');
+
+  return {
+    enabled: getScheduleConfig<boolean>('enabled', true),
     cleanupLogs: {
-      enabled: getConfig<boolean>('schedule.cleanup.enabled', true),
-      cron: getConfig<string>('schedule.cleanup.cron', '0 0 * * *'),
-      retentionDays: getConfig<number>('schedule.cleanup.retention', 30),
+      enabled: getScheduleConfig<boolean>('cleanup.enabled', true),
+      cron: getScheduleConfig<string>('cleanup.cron', '0 0 * * *'),
+      retentionDays: getScheduleConfig<number>('cleanup.retention', 30),
     },
     healthCheck: {
-      enabled: getConfig<boolean>('schedule.health.enabled', true),
-      cron: getConfig<string>('schedule.health.cron', '0 * * * *'),
+      enabled: getScheduleConfig<boolean>('health.enabled', true),
+      cron: getScheduleConfig<string>('health.cron', '0 * * * *'),
     },
-  }),
-);
+  };
+});

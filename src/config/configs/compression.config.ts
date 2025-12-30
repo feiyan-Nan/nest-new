@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export interface ICompressionConfig {
   enabled: boolean;
@@ -7,11 +7,12 @@ export interface ICompressionConfig {
   brotliQuality: number;
 }
 
-export default registerAs(
-  'compression',
-  (): ICompressionConfig => ({
-    enabled: getConfig<boolean>('compression.enabled', false),
-    threshold: getConfig<number>('compression.threshold', 1024),
-    brotliQuality: getConfig<number>('compression.quality', 4),
-  }),
-);
+export default registerAs('compression', (): ICompressionConfig => {
+  const getCompressionConfig = createNamespaceConfig('compression');
+
+  return {
+    enabled: getCompressionConfig<boolean>('enabled', false),
+    threshold: getCompressionConfig<number>('threshold', 1024),
+    brotliQuality: getCompressionConfig<number>('quality', 4),
+  };
+});

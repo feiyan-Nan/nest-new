@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export interface ISwaggerConfig {
   enabled: boolean;
@@ -9,13 +9,14 @@ export interface ISwaggerConfig {
   path: string;
 }
 
-export default registerAs(
-  'swagger',
-  (): ISwaggerConfig => ({
-    enabled: getConfig<boolean>('swagger.enabled', true),
-    title: getConfig<string>('swagger.title', 'API'),
-    description: getConfig<string>('swagger.description', 'API Documentation'),
-    version: getConfig<string>('swagger.version', '1.0'),
-    path: getConfig<string>('swagger.path', 'docs'),
-  }),
-);
+export default registerAs('swagger', (): ISwaggerConfig => {
+  const getSwaggerConfig = createNamespaceConfig('swagger');
+
+  return {
+    enabled: getSwaggerConfig<boolean>('enabled', true),
+    title: getSwaggerConfig<string>('title', 'API'),
+    description: getSwaggerConfig<string>('description', 'API Documentation'),
+    version: getSwaggerConfig<string>('version', '1.0'),
+    path: getSwaggerConfig<string>('path', 'docs'),
+  };
+});

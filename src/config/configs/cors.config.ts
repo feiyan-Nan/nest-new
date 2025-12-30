@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export interface ICorsConfig {
   enabled: boolean;
@@ -13,20 +13,18 @@ export interface ICorsConfig {
   excludePaths?: string[];
 }
 
-export default registerAs(
-  'cors',
-  (): ICorsConfig => ({
-    enabled: getConfig<boolean>('cors.enabled', false),
-    origin: getConfig<string | string[]>('cors.origin', '*'),
-    methods: getConfig<string>(
-      'cors.methods',
-      'GET,HEAD,PUT,PATCH,POST,DELETE',
-    ),
-    allowedHeaders: getConfig<string>('cors.headers', '*'),
-    exposedHeaders: getConfig<string>('cors.exposedHeaders'),
-    credentials: getConfig<boolean>('cors.credentials', false),
-    maxAge: getConfig<number>('cors.maxAge', 3600),
-    includePaths: getConfig<string[]>('cors.includePaths'),
-    excludePaths: getConfig<string[]>('cors.excludePaths'),
-  }),
-);
+export default registerAs('cors', (): ICorsConfig => {
+  const getCorsConfig = createNamespaceConfig('cors');
+
+  return {
+    enabled: getCorsConfig<boolean>('enabled', false),
+    origin: getCorsConfig<string | string[]>('origin', '*'),
+    methods: getCorsConfig<string>('methods', 'GET,HEAD,PUT,PATCH,POST,DELETE'),
+    allowedHeaders: getCorsConfig<string>('headers', '*'),
+    exposedHeaders: getCorsConfig<string>('exposedHeaders'),
+    credentials: getCorsConfig<boolean>('credentials', false),
+    maxAge: getCorsConfig<number>('maxAge', 3600),
+    includePaths: getCorsConfig<string[]>('includePaths'),
+    excludePaths: getCorsConfig<string[]>('excludePaths'),
+  };
+});

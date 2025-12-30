@@ -1,15 +1,16 @@
 import { registerAs } from '@nestjs/config';
-import { getConfig } from '../yaml-loader';
+import { createNamespaceConfig } from '../yaml-loader';
 
 export interface IApiConfig {
   prefix: string;
   version: string;
 }
 
-export default registerAs(
-  'api',
-  (): IApiConfig => ({
-    prefix: getConfig<string>('api.prefix', 'api'),
-    version: getConfig<string>('api.version', 'v1'),
-  }),
-);
+export default registerAs('api', (): IApiConfig => {
+  const getApiConfig = createNamespaceConfig('api');
+
+  return {
+    prefix: getApiConfig<string>('prefix', 'api'),
+    version: getApiConfig<string>('version', 'v1'),
+  };
+});

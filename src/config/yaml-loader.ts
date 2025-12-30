@@ -101,3 +101,19 @@ export function getConfig<T = unknown>(path: string, defaultValue?: T): T {
 
   return value as T;
 }
+
+/**
+ * 创建命名空间配置获取器
+ * @param namespace 命名空间，如 'api', 'database', 'app' 等
+ * @returns 配置获取函数
+ *
+ * @example
+ * ```typescript
+ * const getApiConfig = createNamespaceConfig('api');
+ * const prefix = getApiConfig<string>('prefix', 'api');
+ * ```
+ */
+export function createNamespaceConfig(namespace: string) {
+  return <T>(key: string, defaultValue?: T): T =>
+    getConfig<T>(`${namespace}.${key}`, defaultValue);
+}

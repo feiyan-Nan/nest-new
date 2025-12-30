@@ -20,7 +20,10 @@ export class AppController {
 
   @Get('config')
   @ApiOperation({ summary: 'Get application config' })
-  @ApiResponse({ status: 200, description: 'Returns application configuration' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns application configuration',
+  })
   getConfig(): Record<string, unknown> {
     const { port, env } = this.configService.app;
     const { prefix, version } = this.configService.api;
