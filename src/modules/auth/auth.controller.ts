@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto, RefreshTokenDto } from './dto';
@@ -29,7 +22,6 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'user_login' })
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
@@ -37,14 +29,12 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'refresh_tokens' })
   async refresh(@Body() dto: RefreshTokenDto) {
     return this.authService.refreshTokens(dto.refreshToken);
   }
 
   @Post('logout')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'logout_user' })
   async logout(@Body() dto: RefreshTokenDto) {
@@ -52,7 +42,6 @@ export class AuthController {
   }
 
   @Post('logout-all')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'logout_all_devices' })
   async logoutAll(@CurrentUser() user: CurrentUserData) {

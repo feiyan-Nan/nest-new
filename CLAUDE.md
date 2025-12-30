@@ -92,19 +92,19 @@ database:
 
 ### 多环境配置
 
-**默认环境**：如果未设置 `RUNNING_ENV` 环境变量，系统默认使用 `development` 环境。
+**默认环境**：如果未设置 `NODE_ENV` 环境变量，系统默认使用 `development` 环境。
 
-**环境变量**：通过 `RUNNING_ENV` 指定运行环境（development/production/test）
+**环境变量**：通过 `NODE_ENV` 指定运行环境（development/production/test）
 
 **配置文件加载顺序**:
 1. 首先加载 `config.common.yml`（公共配置，如果存在）
-2. 然后加载 `config.${RUNNING_ENV}.yml`（环境配置）并与公共配置合并
+2. 然后加载 `config.${NODE_ENV}.yml`（环境配置）并与公共配置合并
 3. 如果对应的环境配置文件不存在，系统会抛出错误并提示创建
 
 **package.json 命令已自动配置**:
-- `pnpm start:dev` - 使用 `RUNNING_ENV=development`
-- `pnpm start:prod` - 使用 `RUNNING_ENV=production`
-- `pnpm test` - 使用 `RUNNING_ENV=test`
+- `pnpm start:dev` - 使用 `NODE_ENV=development`
+- `pnpm start:prod` - 使用 `NODE_ENV=production`
+- `pnpm test` - 使用 `NODE_ENV=test`
 
 **首次使用**:
 ```bash
@@ -126,7 +126,7 @@ cp config.example.yml config.production.yml
 vim config.production.yml
 
 # 3. 部署时设置环境变量
-RUNNING_ENV=production pnpm start:prod
+NODE_ENV=production pnpm start:prod
 ```
 
 ### 配置结构（简化的 key 名称）
@@ -202,3 +202,4 @@ const dbConfig = this.configService.database;
 - 配置通过 `AppConfigService` 注入
 - 每次运行完pnpm start:dev, 请确保查看终端输出以确认没有错误，并且测试结束关闭端口服务,以免端口被占用导致下次启动失败。
 - 数据库不要创建外键约束，以免影响性能。逻辑由应用层控制。
+- 所有的接口都不返回201状态码

@@ -25,7 +25,7 @@ export class AuthService {
     private readonly configService: AppConfigService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<AuthTokens> {
+  async register(dto: RegisterDto): Promise<{ message: string }> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
     if (existingUser) {
       throw new ConflictException('auth.email_already_exists');
@@ -33,13 +33,14 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const user = await this.userRepository.create({
+    await this.userRepository.create({
       email: dto.email,
       name: dto.name,
       password: hashedPassword,
+      isActive: true,
     });
 
-    return this.generateTokens(user.id, user.email);
+    return { message: 'auth.registration_successful' };
   }
 
   async login(dto: LoginDto): Promise<AuthTokens> {

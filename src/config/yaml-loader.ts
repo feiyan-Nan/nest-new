@@ -23,10 +23,10 @@ function loadYamlFile(filePath: string): ConfigValue | null {
 
 /**
  * 获取配置文件路径
- * 默认使用 development 环境，可通过 RUNNING_ENV 环境变量指定
+ * 默认使用 development 环境，可通过 NODE_ENV 环境变量指定
  */
 function getConfigPath(): string {
-  const env = process.env.RUNNING_ENV || 'development';
+  const env = process.env.NODE_ENV || 'development';
   const cwd = process.cwd();
   const envConfigPath = join(cwd, `config.${env}.yml`);
 
@@ -37,7 +37,7 @@ function getConfigPath(): string {
 
   throw new Error(
     `Configuration file 'config.${env}.yml' not found.\n` +
-      `Please create it or check your RUNNING_ENV environment variable.\n` +
+      `Please create it or check your NODE_ENV environment variable.\n` +
       `Available environments: development, production, test`,
   );
 }

@@ -26,6 +26,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: WinstonLoggerService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
+    console.log(
+      `🚀 ~ catch 🐶29 ~ process.env.NODE_ENV;: `,
+      process.env.NODE_ENV,
+    );
+    console.log(`🚀 ~ catch 🐶31 ~ exception: `, exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
