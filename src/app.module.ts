@@ -10,10 +10,8 @@ import { Request } from 'express';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { AppConfigModule } from '@/config/config.module';
-import { ProvidersModule } from '@/examples/providers-demo.module';
 import { DatabaseModule } from '@/database/database.module';
 import { LoggerModule } from '@/logger';
-import { LoggerDemoModule } from '@/logger/logger-demo.module';
 import { HealthModule } from '@/health/health.module';
 import { ScheduleTasksModule } from '@/schedule/schedule.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
@@ -43,8 +41,6 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
     LoggerModule,
     DatabaseModule,
     HealthModule,
-    ProvidersModule,
-    LoggerDemoModule,
     ScheduleTasksModule,
   ],
   controllers: [AppController],
