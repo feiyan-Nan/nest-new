@@ -36,8 +36,9 @@ async function bootstrap() {
     );
   }
 
+  const apiConfig = configService.api;
   // Set global prefix
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(apiConfig.prefix);
 
   // Enable URI Versioning
   app.enableVersioning({
@@ -65,7 +66,9 @@ async function bootstrap() {
   await app.listen(port);
 
   const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
-  logger.log(`Application is running on: http://localhost:${port}`);
+  logger.log(
+    `Application is running on: http://localhost:${port}/${apiConfig.prefix}`,
+  );
   if (swaggerConfig.enabled) {
     logger.log(`Swagger docs: http://localhost:${port}/${swaggerConfig.path}`);
   }
