@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { LoggerService, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import { constants } from 'node:zlib';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
@@ -43,10 +44,31 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  // Setup Swagger
+  const swaggerConfig = configService.swagger;
+  if (swaggerConfig.enabled) {
+    const documentConfig = new DocumentBuilder()
+      .setTitle(swaggerConfig.title)
+      .setDescription(swaggerConfig.description)
+      .setVersion(swaggerConfig.version)
+      .setContact(
+        '小破孩',
+        'https://github.com/feiyan-Nan',
+        '3328921305@qq.com',
+      )
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, documentConfig);
+    SwaggerModule.setup(swaggerConfig.path, app, document);
+  }
+
   await app.listen(port);
 
   const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   logger.log(`Application is running on: http://localhost:${port}`);
+  if (swaggerConfig.enabled) {
+    logger.log(`Swagger docs: http://localhost:${port}/${swaggerConfig.path}`);
+  }
 }
 
 bootstrap().catch((error: unknown) => {

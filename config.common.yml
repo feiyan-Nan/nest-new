@@ -37,3 +37,11 @@ database:
 # JWT 配置
 jwt:
   expires: 7d           # 过期时间
+
+# Swagger 配置
+swagger:
+  enabled: true         # 是否启用 Swagger
+  title: NestJS API     # API 标题
+  description: API Documentation  # API 描述
+  version: '1.0'        # API 版本
+  path: docs            # Swagger 访问路径

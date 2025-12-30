@@ -9,6 +9,7 @@ import {
   corsConfig,
   compressionConfig,
   scheduleConfig,
+  swaggerConfig,
 } from './configs';
 
 @Global()
@@ -23,6 +24,7 @@ import {
         corsConfig,
         compressionConfig,
         scheduleConfig,
+        swaggerConfig,
       ],
       cache: true,
     }),

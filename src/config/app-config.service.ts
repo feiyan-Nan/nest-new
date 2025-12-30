@@ -8,6 +8,7 @@ import {
   ICorsConfig,
   ICompressionConfig,
   IScheduleConfig,
+  ISwaggerConfig,
 } from './configs';
 
 @Injectable()
@@ -40,5 +41,9 @@ export class AppConfigService {
 
   get schedule(): IScheduleConfig {
     return this.configService.get<IScheduleConfig>('schedule')!;
+  }
+
+  get swagger(): ISwaggerConfig {
+    return this.configService.get<ISwaggerConfig>('swagger')!;
   }
 }

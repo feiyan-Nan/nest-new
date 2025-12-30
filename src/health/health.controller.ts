@@ -6,7 +6,9 @@ import {
   TypeOrmHealthIndicator,
   DiskHealthIndicator,
 } from '@nestjs/terminus';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -18,13 +20,13 @@ export class HealthController {
 
   @Get()
   @HealthCheck()
+  @ApiOperation({ summary: 'Full health check' })
+  @ApiResponse({ status: 200, description: 'Returns overall health status' })
+  @ApiResponse({ status: 503, description: 'Service unavailable' })
   check() {
     return this.health.check([
-      // 检查数据库连接
       () => this.typeorm.pingCheck('database', { timeout: 1500 }),
-      // 检查应用本身
       () => this.http.pingCheck('nestjs', 'http://localhost:3000'),
-      // 检查磁盘空间（使用超过 80% 时报错）
       () =>
         this.disk.checkStorage('disk', { path: '/', thresholdPercent: 0.8 }),
     ]);
@@ -32,8 +34,10 @@ export class HealthController {
 
   @Get('live')
   @HealthCheck()
+  @ApiOperation({ summary: 'Liveness probe' })
+  @ApiResponse({ status: 200, description: 'Application is running' })
+  @ApiResponse({ status: 503, description: 'Application is not running' })
   live() {
-    // Liveness 探针 - 检查应用是否运行
     return this.health.check([
       () =>
         this.http.pingCheck('nestjs-live', 'http://localhost:3000', {
@@ -44,8 +48,10 @@ export class HealthController {
 
   @Get('ready')
   @HealthCheck()
+  @ApiOperation({ summary: 'Readiness probe' })
+  @ApiResponse({ status: 200, description: 'Application is ready' })
+  @ApiResponse({ status: 503, description: 'Application is not ready' })
   ready() {
-    // Readiness 探针 - 检查应用是否准备好处理请求
     return this.health.check([
       () => this.typeorm.pingCheck('database', { timeout: 1500 }),
       () =>
@@ -55,8 +61,10 @@ export class HealthController {
 
   @Get('startup')
   @HealthCheck()
+  @ApiOperation({ summary: 'Startup probe' })
+  @ApiResponse({ status: 200, description: 'Application started successfully' })
+  @ApiResponse({ status: 503, description: 'Application startup failed' })
   startup() {
-    // Startup 探针 - 检查应用启动是否完成
     return this.health.check([
       () =>
         this.http.pingCheck('nestjs-startup', 'http://localhost:3000', {

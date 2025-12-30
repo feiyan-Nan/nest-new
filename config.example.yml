@@ -52,3 +52,11 @@ schedule:
   health:               # 健康检查任务
     enabled: true       # 是否启用
     cron: '0 * * * *'   # 执行时间（每小时）
+
+# Swagger 配置
+swagger:
+  enabled: true         # 是否启用 Swagger（生产环境建议 false）
+  title: NestJS API     # API 标题
+  description: API Documentation  # API 描述
+  version: '1.0'        # API 版本
+  path: docs            # Swagger 访问路径（访问地址：/docs）
