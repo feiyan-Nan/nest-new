@@ -4,7 +4,7 @@ import {
   MiddlewareConsumer,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { ClsModule, ClsService, ClsStore } from 'nestjs-cls';
 import { Request } from 'express';
 import { AppController } from '@/app.controller';
@@ -14,9 +14,11 @@ import { DatabaseModule } from '@/database/database.module';
 import { LoggerModule } from '@/logger';
 import { HealthModule } from '@/health/health.module';
 import { ScheduleTasksModule } from '@/schedule/schedule.module';
+import { AuthModule } from '@/modules/auth/auth.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -42,10 +44,15 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
     DatabaseModule,
     HealthModule,
     ScheduleTasksModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

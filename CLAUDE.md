@@ -201,3 +201,4 @@ const dbConfig = this.configService.database;
 - 数据库访问使用仓储模式（见 `src/database/repositories/`）
 - 配置通过 `AppConfigService` 注入
 - 每次运行完pnpm start:dev, 请确保查看终端输出以确认没有错误，并且测试结束关闭端口服务,以免端口被占用导致下次启动失败。
+- 数据库不要创建外键约束，以免影响性能。逻辑由应用层控制。

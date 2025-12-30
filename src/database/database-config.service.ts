@@ -18,7 +18,6 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       synchronize: config.synchronize,
       logging: config.logging,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      migrations: [config.migrationsPath],
     };
   }
 

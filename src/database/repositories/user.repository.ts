@@ -22,6 +22,14 @@ export class UserRepository {
     return this.repository.findOne({ where: { email } });
   }
 
+  async findByEmailWithPassword(email: string): Promise<User | null> {
+    return this.repository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email })
+      .addSelect('user.password')
+      .getOne();
+  }
+
   async create(data: Partial<User>): Promise<User> {
     const user = this.repository.create(data);
     return this.repository.save(user);

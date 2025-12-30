@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from '@/app.service';
 import { AppConfigService } from '@/config/app-config.service';
+import { Public } from '@/modules/auth/decorators/public.decorator';
 
 @ApiTags('App')
 @Controller()
@@ -11,6 +12,7 @@ export class AppController {
     private readonly configService: AppConfigService,
   ) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Hello World' })
   @ApiResponse({ status: 200, description: 'Returns hello message' })
@@ -18,6 +20,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Public()
   @Get('config')
   @ApiOperation({ summary: 'Get application config' })
   @ApiResponse({

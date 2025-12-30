@@ -16,7 +16,10 @@ database:
 
 # JWT 配置
 jwt:
-  secret: dev-secret-key-for-development-only
+  accessSecret: b8e001214798284d846f5863ff27f002af76ec8e75834c4b08e3c4ad8aeb621520a0919e152959cc0604536f6067b022a7ec1290060468b0d597ccfd6edb0116
+  accessExpires: 15m
+  refreshSecret: 89030422b243988b3a267bdba1adf72c5676b0b1f622b802ee1b049317c8f76ef73b5909bd2c96b459eaf2c7af053937901b14e802d866b06f00f11819e743e6
+  refreshExpires: 7d
 
 # CORS 配置
 cors:

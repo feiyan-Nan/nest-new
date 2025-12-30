@@ -2,18 +2,25 @@ import { registerAs } from '@nestjs/config';
 import { createNamespaceConfig } from '../yaml-loader';
 
 export interface IJwtConfig {
-  secret: string;
-  expiresIn: string;
+  accessSecret: string;
+  accessExpiresIn: string;
+  refreshSecret: string;
+  refreshExpiresIn: string;
 }
 
 export default registerAs('jwt', (): IJwtConfig => {
   const getJwtConfig = createNamespaceConfig('jwt');
 
   return {
-    secret: getJwtConfig<string>(
-      'secret',
-      'default-secret-key-change-in-production',
+    accessSecret: getJwtConfig<string>(
+      'accessSecret',
+      'default-access-secret-change-in-production',
     ),
-    expiresIn: getJwtConfig<string>('expires', '7d'),
+    accessExpiresIn: getJwtConfig<string>('accessExpires', '15m'),
+    refreshSecret: getJwtConfig<string>(
+      'refreshSecret',
+      'default-refresh-secret-change-in-production',
+    ),
+    refreshExpiresIn: getJwtConfig<string>('refreshExpires', '7d'),
   };
 });

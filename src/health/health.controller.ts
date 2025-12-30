@@ -7,6 +7,7 @@ import {
   DiskHealthIndicator,
 } from '@nestjs/terminus';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Public } from '@/modules/auth/decorators/public.decorator';
 
 @ApiTags('Health')
 @Controller('health')
@@ -18,6 +19,7 @@ export class HealthController {
     private readonly disk: DiskHealthIndicator,
   ) {}
 
+  @Public()
   @Get()
   @HealthCheck()
   @ApiOperation({ summary: 'Full health check' })
@@ -32,6 +34,7 @@ export class HealthController {
     ]);
   }
 
+  @Public()
   @Get('live')
   @HealthCheck()
   @ApiOperation({ summary: 'Liveness probe' })
@@ -46,6 +49,7 @@ export class HealthController {
     ]);
   }
 
+  @Public()
   @Get('ready')
   @HealthCheck()
   @ApiOperation({ summary: 'Readiness probe' })
@@ -59,6 +63,7 @@ export class HealthController {
     ]);
   }
 
+  @Public()
   @Get('startup')
   @HealthCheck()
   @ApiOperation({ summary: 'Startup probe' })

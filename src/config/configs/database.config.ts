@@ -18,7 +18,6 @@ export interface IDatabaseConfig {
   database: string;
   synchronize: boolean;
   logging: boolean;
-  migrationsPath: string;
 }
 
 export default registerAs('database', (): IDatabaseConfig => {
@@ -33,6 +32,5 @@ export default registerAs('database', (): IDatabaseConfig => {
     database: getDbConfig<string>('name', 'nest_db'),
     synchronize: getDbConfig<boolean>('sync', false),
     logging: getDbConfig<boolean>('logging', false),
-    migrationsPath: getDbConfig<string>('migrations', 'src/database/migrations'),
   };
 });

@@ -13,12 +13,13 @@ database:
   name: nest_db         # 数据库名称
   sync: false           # 是否自动同步表结构（生产环境建议 false）
   logging: false        # 是否开启 SQL 日志
-  migrations: src/database/migrations  # 迁移文件路径
 
 # JWT 配置
 jwt:
-  secret: your-secret-key-change-in-production  # JWT 密钥（生产环境必须修改）
-  expires: 7d           # 过期时间：7d, 1h, 30m 等
+  accessSecret: your-access-secret-key-change-in-production  # Access Token 密钥（生产环境必须修改）
+  accessExpires: 15m      # Access Token 过期时间：15m（15分钟）
+  refreshSecret: your-refresh-secret-key-change-in-production  # Refresh Token 密钥（生产环境必须修改）
+  refreshExpires: 7d      # Refresh Token 过期时间：7d（7天）
 
 # API 配置
 api:
