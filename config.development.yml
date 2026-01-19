@@ -40,3 +40,12 @@ schedule:
   health:
     enabled: true
     cron: '*/30 * * * *'  # 开发环境每 30 分钟检查一次
+
+# Redis 配置
+redis:
+  host: localhost
+  port: 6379
+  password: ''        # 如果 Redis 设置了密码，在这里配置
+  db: 0
+  keyPrefix: 'nest:dev:'
+  ttl: 3600

@@ -32,10 +32,7 @@ export class RefreshTokenRepository {
   }
 
   async revokeByToken(token: string): Promise<boolean> {
-    const result = await this.repository.update(
-      { token },
-      { isRevoked: true },
-    );
+    const result = await this.repository.update({ token }, { isRevoked: true });
     return (result.affected ?? 0) > 0;
   }
 

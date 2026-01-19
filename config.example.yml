@@ -61,3 +61,12 @@ swagger:
   description: API Documentation  # API 描述
   version: '1.0'        # API 版本
   path: docs            # Swagger 访问路径（访问地址：/docs）
+
+# Redis 配置
+redis:
+  host: localhost       # Redis 主机
+  port: 6379           # Redis 端口
+  password: ''         # Redis 密码（如果有）
+  db: 0                # 数据库索引
+  keyPrefix: 'nest:'   # Key 前缀
+  ttl: 3600            # 默认过期时间（秒）

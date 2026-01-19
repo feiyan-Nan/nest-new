@@ -9,6 +9,7 @@ import {
   ICompressionConfig,
   IScheduleConfig,
   ISwaggerConfig,
+  IRedisConfig,
 } from './configs';
 
 @Injectable()
@@ -45,5 +46,9 @@ export class AppConfigService {
 
   get swagger(): ISwaggerConfig {
     return this.configService.get<ISwaggerConfig>('swagger')!;
+  }
+
+  get redis(): IRedisConfig {
+    return this.configService.get<IRedisConfig>('redis')!;
   }
 }

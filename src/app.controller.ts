@@ -1,4 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from '@/app.service';
 import { AppConfigService } from '@/config/app-config.service';
@@ -17,6 +23,7 @@ export class AppController {
   @ApiOperation({ summary: 'Hello World' })
   @ApiResponse({ status: 200, description: 'Returns hello message' })
   getHello(): string {
+    throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     return this.appService.getHello();
   }
 

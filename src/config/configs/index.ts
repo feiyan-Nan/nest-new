@@ -6,6 +6,7 @@ export { default as corsConfig } from './cors.config';
 export { default as compressionConfig } from './compression.config';
 export { default as scheduleConfig } from './schedule.config';
 export { default as swaggerConfig } from './swagger.config';
+export { default as redisConfig } from './redis.config';
 
 export * from './app.config';
 export * from './database.config';
@@ -15,3 +16,4 @@ export * from './cors.config';
 export * from './compression.config';
 export * from './schedule.config';
 export * from './swagger.config';
+export * from './redis.config';

@@ -10,6 +10,7 @@ import {
   compressionConfig,
   scheduleConfig,
   swaggerConfig,
+  redisConfig,
 } from './configs';
 
 @Global()
@@ -25,6 +26,7 @@ import {
         compressionConfig,
         scheduleConfig,
         swaggerConfig,
+        redisConfig,
       ],
       cache: true,
     }),

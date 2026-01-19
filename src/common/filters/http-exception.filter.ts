@@ -16,9 +16,26 @@ interface ErrorResponse {
   method: string;
   message: string;
   error?: string;
-  details?: any;
+  details?: unknown;
   requestId?: string;
   stack?: string;
+}
+
+interface HttpExceptionResponse {
+  message?: string;
+  error?: string;
+  details?: unknown;
+}
+
+interface ValidationError {
+  property: string;
+  constraints: Record<string, string>;
+  value: unknown;
+}
+
+interface DatabaseDriverError {
+  code?: string;
+  message?: string;
 }
 
 @Catch()
@@ -26,11 +43,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: WinstonLoggerService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
-    console.log(
-      `🚀 ~ catch 🐶29 ~ process.env.NODE_ENV;: `,
-      process.env.NODE_ENV,
-    );
-    console.log(`🚀 ~ catch 🐶31 ~ exception: `, exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -55,18 +67,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
     let error: string | undefined;
-    let details: any;
+    let details: unknown;
     let stack: string | undefined;
 
     // HTTP Exception
     if (exception instanceof HttpException) {
+      console.log(`➤➤➤ ~ http-exception.filter.ts ~ L75`);
       statusCode = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
       } else if (typeof exceptionResponse === 'object') {
-        const responseObj = exceptionResponse as any;
+        const responseObj = exceptionResponse as HttpExceptionResponse;
         message = responseObj.message || message;
         error = responseObj.error;
         details = responseObj.details;
@@ -90,16 +103,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
       error = 'Database Error';
 
       if (isDevelopment) {
+        const dbError = exception.driverError as
+          | DatabaseDriverError
+          | undefined;
         details = {
           query: exception.query,
-          parameters: exception.parameters,
-          driverError: exception.driverError?.message,
+          parameters: exception.parameters as unknown[],
+          driverError: dbError?.message,
         };
         stack = exception.stack;
       }
 
       // Handle specific database errors
-      const driverError = exception.driverError;
+      const driverError = exception.driverError as
+        | DatabaseDriverError
+        | undefined;
       if (driverError?.code === 'ER_DUP_ENTRY') {
         statusCode = HttpStatus.CONFLICT;
         message = 'Duplicate entry detected';
@@ -171,7 +189,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
   }
 
-  private isValidationError(exception: unknown): boolean {
+  private isValidationError(exception: unknown): exception is ValidationError {
     return !!(
       exception &&
       typeof exception === 'object' &&
@@ -180,7 +198,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     );
   }
 
-  private extractValidationErrors(exception: any): any {
+  private extractValidationErrors(
+    exception: ValidationError | ValidationError[],
+  ): unknown {
     if (Array.isArray(exception)) {
       return exception.map((error) => ({
         property: error.property,
@@ -196,7 +216,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
   }
 
-  private sanitizeException(exception: unknown): any {
+  private sanitizeException(exception: unknown): unknown {
     if (exception instanceof Error) {
       return {
         name: exception.name,

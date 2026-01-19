@@ -1,11 +1,11 @@
 import {
+  CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Request, Response } from 'express';
 import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
@@ -20,8 +20,21 @@ export class LoggingInterceptor implements NestInterceptor {
     const method = request.method;
     const url = request.url;
 
-    // 排除健康检查路径，不记录日志
-    if (url.startsWith('/health')) {
+    // 排除高频路径，不记录日志
+    const excludePaths = [
+      '/health', // 健康检查
+      '/metrics', // 监控指标
+      '/favicon.ico', // 网站图标
+      '/robots.txt', // 爬虫协议
+      '/static/', // 静态资源
+      '/public/', // 公共资源
+      '/assets/', // 前端资源
+      '/uploads/', // 上传文件
+      '/_next/', // Next.js 资源（如果使用）
+      '/socket.io/', // WebSocket（如果使用）
+    ];
+
+    if (excludePaths.some((path) => url.startsWith(path))) {
       return next.handle();
     }
     const headers = (request.headers as Record<string, string>) || {};

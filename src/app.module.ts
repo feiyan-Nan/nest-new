@@ -15,6 +15,8 @@ import { LoggerModule } from '@/logger';
 import { HealthModule } from '@/health/health.module';
 import { ScheduleTasksModule } from '@/schedule/schedule.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { RedisModule } from '@/redis';
+import { CacheExampleModule } from '@/redis/examples/cache-example.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -42,9 +44,11 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
     AppConfigModule,
     LoggerModule,
     DatabaseModule,
+    RedisModule,
     HealthModule,
     ScheduleTasksModule,
     AuthModule,
+    CacheExampleModule,
   ],
   controllers: [AppController],
   providers: [

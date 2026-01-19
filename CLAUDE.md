@@ -36,12 +36,19 @@ src/
 │       ├── cors.config.ts       # CORS 配置
 │       ├── compression.config.ts # 压缩配置
 │       ├── schedule.config.ts   # 定时任务配置
+│       ├── redis.config.ts      # Redis 配置
 │       └── index.ts            # 配置导出文件
 ├── database/               # TypeORM 数据库层
 │   ├── database.module.ts  # 全局数据库模块
 │   ├── database-config.service.ts  # 数据库配置服务
 │   ├── entities/           # TypeORM 实体
 │   └── repositories/       # 仓储模式实现
+├── redis/                  # Redis 缓存层
+│   ├── redis.module.ts     # 全局 Redis 模块
+│   ├── redis.service.ts    # Redis 服务
+│   ├── decorators/         # 缓存装饰器
+│   ├── interceptors/       # 缓存拦截器
+│   └── examples/           # 使用示例
 └── common/                 # 共享中间件
 ```
 
@@ -175,6 +182,14 @@ schedule:
   health:                 # 健康检查
     enabled: true
     cron: '0 * * * *'
+
+redis:
+  host: localhost         # Redis 主机
+  port: 6379             # Redis 端口
+  password: ''           # Redis 密码
+  db: 0                  # 数据库索引
+  keyPrefix: 'nest:'     # Key 前缀
+  ttl: 3600              # 默认过期时间（秒）
 ```
 
 ### 使用配置
@@ -185,6 +200,27 @@ constructor(private configService: AppConfigService) {}
 // 使用配置
 const port = this.configService.app.port;
 const dbConfig = this.configService.database;
+const redisConfig = this.configService.redis;
+```
+
+### Redis 缓存
+
+项目已集成 Redis 缓存系统，详细使用说明请查看：[Redis 缓存文档](docs/redis-cache.md)
+
+**快速使用**：
+
+```typescript
+// 注入 RedisService
+constructor(private readonly redisService: RedisService) {}
+
+// 基础操作
+await this.redisService.set('key', value, 300);  // 缓存 5 分钟
+const data = await this.redisService.get('key');
+
+// 自动缓存（推荐）
+return await this.redisService.getOrSet('user:1', async () => {
+  return await this.userRepository.findOne({ where: { id: 1 } });
+}, 600);
 ```
 
 ### 添加新配置
@@ -199,6 +235,7 @@ const dbConfig = this.configService.database;
 
 - 全局模块使用 `@Global()` 装饰器
 - 数据库访问使用仓储模式（见 `src/database/repositories/`）
+- 缓存访问使用 `RedisService`（见 `src/redis/redis.service.ts`）
 - 配置通过 `AppConfigService` 注入
 - 每次运行完pnpm start:dev, 请确保查看终端输出以确认没有错误，并且测试结束关闭端口服务,以免端口被占用导致下次启动失败。
 - 数据库不要创建外键约束，以免影响性能。逻辑由应用层控制。

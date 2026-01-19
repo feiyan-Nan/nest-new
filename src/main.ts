@@ -14,7 +14,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  app.useLogger(app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER));
 
   const winstonLoggerService = app.get(WinstonLoggerService);
   app.useGlobalFilters(new HttpExceptionFilter(winstonLoggerService));
