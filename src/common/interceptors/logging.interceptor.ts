@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Request, Response } from 'express';
+import * as requestIp from 'request-ip';
 import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
 @Injectable()
@@ -41,7 +42,8 @@ export class LoggingInterceptor implements NestInterceptor {
     const body = (request.body as Record<string, unknown>) || {};
     const query = (request.query as Record<string, unknown>) || {};
     const params = (request.params as Record<string, unknown>) || {};
-    const ip = request.ip;
+    const ip = requestIp.getClientIp(request);
+    console.log(`🚀 ~ intercept ~ ip: `, ip);
 
     const userAgent = headers['user-agent'] || 'Unknown';
     const startTime = Date.now();

@@ -23,7 +23,7 @@ export class AppController {
   @ApiOperation({ summary: 'Hello World' })
   @ApiResponse({ status: 200, description: 'Returns hello message' })
   getHello(): string {
-    throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    // throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     return this.appService.getHello();
   }
 

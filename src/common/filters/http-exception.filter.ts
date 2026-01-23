@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
 interface ErrorResponse {
@@ -126,6 +127,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
         statusCode = HttpStatus.BAD_REQUEST;
         message = 'Referenced record does not exist';
         error = 'Bad Request';
+      }
+    }
+    // JWT Token Expired
+    else if (exception instanceof TokenExpiredError) {
+      statusCode = HttpStatus.UNAUTHORIZED;
+      message = 'Token has expired';
+      error = 'Unauthorized';
+
+      if (isDevelopment) {
+        details = {
+          expiredAt: String(exception.expiredAt),
+        };
+        stack = exception.stack;
+      }
+    }
+    // JWT Invalid Token
+    else if (exception instanceof JsonWebTokenError) {
+      statusCode = HttpStatus.UNAUTHORIZED;
+      message = String(exception.message || 'Invalid token');
+      error = 'Unauthorized';
+
+      if (isDevelopment) {
+        stack = exception.stack;
       }
     }
     // Unknown Exception
