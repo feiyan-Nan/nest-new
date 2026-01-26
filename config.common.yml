@@ -8,7 +8,7 @@ app:
 # API 配置
 api:
   prefix: api           # API 前缀
-  version: v1           # API 版本
+  version: 1           # API 版本
 
 # CORS 配置
 cors:

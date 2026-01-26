@@ -6,8 +6,6 @@ import { constants } from 'node:zlib';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from '@/app.module';
 import { AppConfigService } from '@/config/app-config.service';
-import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
-import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,9 +13,6 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER));
-
-  const winstonLoggerService = app.get(WinstonLoggerService);
-  app.useGlobalFilters(new HttpExceptionFilter(winstonLoggerService));
 
   const configService = app.get(AppConfigService);
   const { port } = configService.app;
@@ -40,9 +35,9 @@ async function bootstrap() {
   // Set global prefix
   app.setGlobalPrefix(apiConfig.prefix);
 
-  // Enable URI Versioning
   app.enableVersioning({
     type: VersioningType.URI,
+    defaultVersion: String(apiConfig.version),
   });
 
   // Setup Swagger
@@ -67,7 +62,7 @@ async function bootstrap() {
 
   const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   logger.log(
-    `Application is running on: http://localhost:${port}/${apiConfig.prefix}`,
+    `Application is running on: http://localhost:${port}/${apiConfig.prefix}/v${apiConfig.version}`,
   );
   if (swaggerConfig.enabled) {
     logger.log(`Swagger docs: http://localhost:${port}/${swaggerConfig.path}`);

@@ -4,7 +4,7 @@ import {
   MiddlewareConsumer,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { ClsModule, ClsService, ClsStore } from 'nestjs-cls';
 import { Request } from 'express';
 import { AppController } from '@/app.controller';
@@ -15,12 +15,15 @@ import { LoggerModule } from '@/logger';
 import { HealthModule } from '@/health/health.module';
 import { ScheduleTasksModule } from '@/schedule/schedule.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { UsersModule } from '@/modules/users/users.module';
 import { RedisModule } from '@/redis';
 import { CacheExampleModule } from '@/redis/examples/cache-example.module';
 import { CorsMiddleware } from '@/common/middleware/cors.middleware';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+import { WinstonLoggerService } from '@/logger/winston-logger.service';
 
 @Module({
   imports: [
@@ -48,6 +51,7 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
     HealthModule,
     ScheduleTasksModule,
     AuthModule,
+    UsersModule,
     CacheExampleModule,
   ],
   controllers: [AppController],
@@ -56,6 +60,13 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useFactory: (logger: WinstonLoggerService) => {
+        return new HttpExceptionFilter(logger);
+      },
+      inject: [WinstonLoggerService],
     },
     {
       provide: APP_INTERCEPTOR,

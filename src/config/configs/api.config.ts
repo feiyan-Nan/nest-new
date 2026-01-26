@@ -3,7 +3,7 @@ import { createNamespaceConfig } from '../yaml-loader';
 
 export interface IApiConfig {
   prefix: string;
-  version: string;
+  version: number;
 }
 
 export default registerAs('api', (): IApiConfig => {
@@ -11,6 +11,6 @@ export default registerAs('api', (): IApiConfig => {
 
   return {
     prefix: getApiConfig<string>('prefix', 'api'),
-    version: getApiConfig<string>('version', 'v1'),
+    version: getApiConfig<number>('version', 1),
   };
 });
