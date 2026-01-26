@@ -1,6 +1,10 @@
 # 公共配置文件 - 所有环境共享的配置
 # 环境特定配置（如 config.development.yml）会覆盖这里的配置
 
+# 应用配置
+app:
+  name: Nest---App         # 应用名称
+
 # API 配置
 api:
   prefix: api           # API 前缀

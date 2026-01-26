@@ -2,6 +2,7 @@
 app:
   env: development        # 环境：development, production, test
   port: 3000             # 端口号
+  name: NestApp          # 应用名称
 
 # 数据库配置
 database:

@@ -19,7 +19,7 @@ const requestIdFormat = winston.format((info) => {
   return info;
 });
 
-export const winstonConfig: WinstonModuleOptions = {
+export const createWinstonConfig = (appName: string): WinstonModuleOptions => ({
   transports: [
     new winston.transports.Console({
       level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
@@ -27,7 +27,7 @@ export const winstonConfig: WinstonModuleOptions = {
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
         winston.format.ms(),
         requestIdFormat(),
-        nestWinstonModuleUtilities.format.nestLike('NestApp', {
+        nestWinstonModuleUtilities.format.nestLike(appName, {
           colors: true,
           prettyPrint: true,
           processId: false,
@@ -83,4 +83,4 @@ export const winstonConfig: WinstonModuleOptions = {
   ],
 
   exitOnError: false,
-};
+});

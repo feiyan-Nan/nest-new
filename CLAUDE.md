@@ -192,15 +192,45 @@ redis:
   ttl: 3600              # 默认过期时间（秒）
 ```
 
-### 使用配置
-通过 `AppConfigService` 注入配置：
+### 配置取值规范
+
+**重要规则**：在项目中获取配置时，必须使用 `AppConfigService`，而不是直接使用 `ConfigService`。
+
+**推荐用法**（使用 `AppConfigService`）：
 ```typescript
+// ✅ 正确 - 使用 AppConfigService
 constructor(private configService: AppConfigService) {}
 
-// 使用配置
+const appName = this.configService.app.name;
 const port = this.configService.app.port;
 const dbConfig = this.configService.database;
-const redisConfig = this.configService.redis;
+```
+
+**禁止用法**（直接使用 `ConfigService`）：
+```typescript
+// ❌ 错误 - 直接使用 ConfigService
+constructor(private configService: ConfigService) {}
+
+const appName = this.configService.get<string>('app.name', 'NestApp');
+const port = this.configService.get<number>('app.port', 3000);
+```
+
+**为什么使用 AppConfigService**：
+- **类型安全**：完整的 TypeScript 类型定义和 IDE 提示
+- **统一管理**：所有配置访问都通过统一的入口
+- **更简洁**：使用 getter 方法访问，无需每次指定 key 和默认值
+- **易于维护**：配置结构变更时只需修改 `AppConfigService`
+
+**在模块中使用配置**（如 `forRootAsync`）：
+```typescript
+// ✅ 正确 - 注入 AppConfigService
+WinstonModule.forRootAsync({
+  inject: [AppConfigService],
+  useFactory: (configService: AppConfigService) => {
+    const appName = configService.app.name;
+    return createWinstonConfig(appName);
+  },
+})
 ```
 
 ### Redis 缓存

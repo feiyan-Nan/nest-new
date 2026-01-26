@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
-import { winstonConfig } from './winston.config';
+import { createWinstonConfig } from './winston.config';
 import { WinstonLoggerService } from './winston-logger.service';
+import { AppConfigService } from '@/config/app-config.service';
 
 @Module({
-  imports: [WinstonModule.forRoot(winstonConfig)],
+  imports: [
+    WinstonModule.forRootAsync({
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => {
+        const appName = configService.app.name;
+        return createWinstonConfig(appName);
+      },
+    }),
+  ],
   providers: [WinstonLoggerService],
   exports: [WinstonModule, WinstonLoggerService],
 })
