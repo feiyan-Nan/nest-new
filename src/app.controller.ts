@@ -28,7 +28,7 @@ export class AppController {
   @ApiOperation({ summary: 'Hello World' })
   @ApiResponse({ status: 200, description: 'Returns hello message' })
   getHello(): string {
-    this.logger1.log('hello world');
+    this.logger1.log('hello world243455');
     this.logger.log('nihoa', 'AppController', { name: 'feiyan' });
     // throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     return this.appService.getHello();
