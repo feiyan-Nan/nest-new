@@ -20,16 +20,16 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       // 连接池配置
       extra: {
-        connectionLimit: config.pool.connectionLimit as number,
-        queueLimit: config.pool.queueLimit as number,
-        waitForConnections: config.pool.waitForConnections as boolean,
-        connectionTimeoutMillis: config.pool.connectionTimeoutMillis as number,
+        connectionLimit: config.pool.connectionLimit,
+        queueLimit: config.pool.queueLimit,
+        waitForConnections: config.pool.waitForConnections,
+        connectionTimeoutMillis: config.pool.connectionTimeoutMillis,
       },
       // TypeORM 连接池配置
-      poolSize: config.pool.connectionLimit as number,
-      acquireTimeout: config.pool.acquireTimeout as number,
-      connectTimeout: config.pool.connectionTimeoutMillis as number,
-      maxQueryExecutionTime: config.pool.maxQueryExecutionTime as number,
+      poolSize: config.pool.connectionLimit,
+      acquireTimeout: config.pool.acquireTimeout,
+      connectTimeout: config.pool.connectionTimeoutMillis,
+      maxQueryExecutionTime: config.pool.maxQueryExecutionTime,
     } as TypeOrmModuleOptions;
   }
 
