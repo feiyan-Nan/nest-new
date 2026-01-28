@@ -19,6 +19,16 @@ const requestIdFormat = winston.format((info) => {
   return info;
 });
 
+/**
+ * Winston 默认日志等级 (优先级从高到低):
+ * 0: error
+ * 1: warn
+ * 2: info
+ * 3: http
+ * 4: verbose
+ * 5: debug
+ * 6: silly
+ */
 export const createWinstonConfig = (appName: string): WinstonModuleOptions => ({
   transports: [
     new winston.transports.Console({
