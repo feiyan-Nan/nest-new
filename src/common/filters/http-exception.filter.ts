@@ -73,7 +73,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     // HTTP Exception
     if (exception instanceof HttpException) {
-      console.log(`➤➤➤ ~ http-exception.filter.ts ~ L75`);
       statusCode = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 

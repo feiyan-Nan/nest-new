@@ -151,6 +151,14 @@ database:
   name: nest_db           # 数据库名
   sync: false             # 同步表结构
   logging: false          # SQL 日志
+  pool:                   # 连接池配置
+    connectionLimit: 10           # 最大连接数
+    queueLimit: 0                 # 队列限制
+    waitForConnections: true      # 连接池满时是否等待
+    connectionTimeoutMillis: 2000 # 连接超时（毫秒）
+    acquireTimeout: 30000         # 获取连接超时（毫秒）
+    idleTimeoutMillis: 60000      # 空闲连接超时（毫秒）
+    maxQueryExecutionTime: 60000  # 最大查询执行时间（毫秒）
 
 jwt:
   secret: xxx             # JWT 密钥

@@ -13,6 +13,9 @@ database:
   name: nest_db
   sync: true            # 开发环境可以自动同步表结构
   logging: true         # 开发环境开启 SQL 日志便于调试
+  # 开发环境连接池配置（较小的连接数）
+  pool:
+    connectionLimit: 5  # 开发环境使用较小的连接数
 
 # JWT 配置
 jwt:

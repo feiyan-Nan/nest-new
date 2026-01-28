@@ -37,6 +37,15 @@ database:
   type: mysql            # 数据库类型
   port: 3306            # 数据库端口
   migrations: src/database/migrations  # 迁移文件路径
+  # 连接池配置
+  pool:
+    connectionLimit: 10           # 最大连接数（根据应用负载调整）
+    queueLimit: 0                 # 队列限制（0 表示无限制）
+    waitForConnections: true      # 连接池满时是否等待
+    connectionTimeoutMillis: 2000 # 连接超时时间（毫秒）
+    acquireTimeout: 30000         # 获取连接超时时间（毫秒）
+    idleTimeoutMillis: 60000      # 空闲连接超时时间（毫秒）
+    maxQueryExecutionTime: 60000  # 最大查询执行时间（毫秒）
 
 # JWT 配置
 jwt:
