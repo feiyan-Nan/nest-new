@@ -3,9 +3,10 @@ import { LoggerService, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import { constants } from 'node:zlib';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
 import { AppModule } from '@/app.module';
 import { AppConfigService } from '@/config/app-config.service';
+import { createWinstonConfig } from '@/logger/winston.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -70,16 +71,19 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error: unknown) => {
+  // Use Winston for startup errors to ensure consistent logging
+  const logger = WinstonModule.createLogger(createWinstonConfig('bootstrap'));
+
   if (
     error &&
     typeof error === 'object' &&
     'code' in error &&
     error.code === 'EADDRINUSE'
   ) {
-    console.error('\n❌ Port is already in use!');
-    console.error('💡 Run: pnpm run shut\n');
+    logger.error('Port is already in use!');
+    logger.error('Suggestion: Run `pnpm run shut` to kill the process.');
   } else {
-    console.error('Failed to start application:', error);
+    logger.error('Failed to start application', error);
   }
   process.exit(1);
 });

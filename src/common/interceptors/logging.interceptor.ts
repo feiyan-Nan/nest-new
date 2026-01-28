@@ -43,7 +43,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const query = (request.query as Record<string, unknown>) || {};
     const params = (request.params as Record<string, unknown>) || {};
     const ip = requestIp.getClientIp(request);
-    console.log(`🚀 ~ intercept ~ ip: `, ip);
 
     const userAgent = headers['user-agent'] || 'Unknown';
     const startTime = Date.now();
