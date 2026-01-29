@@ -106,7 +106,7 @@ pnpm test            # 运行测试
 
 ## 文档
 
-- [Docker Compose 使用指南](DOCKER.md)
+- [Docker Compose 使用指南](docs/DOCKER.md)
 - [MongoDB 集成文档](docs/mongodb.md)
 - [Redis 缓存文档](docs/redis-cache.md)
 - [项目开发指南](CLAUDE.md)

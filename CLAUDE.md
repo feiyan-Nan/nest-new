@@ -164,7 +164,7 @@ pnpm start:docker
 **Docker 环境说明**:
 - 配置文件: `config.docker.yml`
 - 包含服务: MySQL (3306)、Redis (6379)、MongoDB (27017)
-- 详细文档: [DOCKER.md](DOCKER.md) 和 [docs/docker-compose.md](docs/docker-compose.md)
+- 详细文档: [DOCKER.md](docs/DOCKER.md) 和 [docs/docker-compose.md](docs/docker-compose.md)
 
 **Docker 服务管理**:
 ```bash

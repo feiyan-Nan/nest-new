@@ -51,4 +51,4 @@ pnpm docker:clean
 
 ## 详细文档
 
-查看完整文档：[docs/docker-compose.md](docs/docker-compose.md)
+查看完整文档：[docs/docker-compose.md](docker-compose.md)
