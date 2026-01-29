@@ -9,12 +9,21 @@ pnpm install          # 安装依赖
 pnpm build            # 构建项目
 pnpm start            # 启动应用
 pnpm start:dev        # 启动开发模式（热重载）
+pnpm start:docker     # 使用 Docker 配置启动
 pnpm start:prod       # 启动生产构建
 pnpm lint             # 运行 ESLint
 pnpm format           # 使用 Prettier 格式化
 pnpm test             # 运行单元测试
 pnpm test:watch       # 监听模式运行测试
 pnpm test:cov         # 运行测试并生成覆盖率报告
+
+# Docker Compose 命令
+pnpm docker:up        # 启动所有服务（MySQL、Redis、MongoDB）
+pnpm docker:down      # 停止所有服务
+pnpm docker:ps        # 查看服务状态
+pnpm docker:logs      # 查看服务日志
+pnpm docker:restart   # 重启服务
+pnpm docker:clean     # 清理所有数据（⚠️ 会删除数据）
 ```
 
 ## 项目架构
@@ -43,6 +52,11 @@ src/
 │   ├── database-config.service.ts  # 数据库配置服务
 │   ├── entities/           # TypeORM 实体
 │   └── repositories/       # 仓储模式实现
+├── mongodb/                # MongoDB 数据库层
+│   ├── mongodb.module.ts   # 全局 MongoDB 模块
+│   ├── mongodb-config.service.ts  # MongoDB 配置服务
+│   ├── schemas/            # Mongoose Schema
+│   └── log.service.ts      # 日志服务示例
 ├── redis/                  # Redis 缓存层
 │   ├── redis.module.ts     # 全局 Redis 模块
 │   ├── redis.service.ts    # Redis 服务
@@ -136,6 +150,33 @@ vim config.production.yml
 NODE_ENV=production pnpm start:prod
 ```
 
+### Docker Compose 环境
+
+**快速启动**（推荐用于开发环境）:
+```bash
+# 1. 启动所有服务（MySQL、Redis、MongoDB）
+pnpm docker:up
+
+# 2. 启动应用（使用 Docker 配置）
+pnpm start:docker
+```
+
+**Docker 环境说明**:
+- 配置文件: `config.docker.yml`
+- 包含服务: MySQL (3306)、Redis (6379)、MongoDB (27017)
+- 详细文档: [DOCKER.md](DOCKER.md) 和 [docs/docker-compose.md](docs/docker-compose.md)
+
+**Docker 服务管理**:
+```bash
+pnpm docker:up        # 启动服务
+pnpm docker:down      # 停止服务
+pnpm docker:ps        # 查看状态
+pnpm docker:logs      # 查看日志
+pnpm docker:restart   # 重启服务
+pnpm docker:clean     # 清理数据（⚠️ 会删除所有数据）
+```
+
+
 ### 配置结构（简化的 key 名称）
 ```yaml
 app:
@@ -198,6 +239,17 @@ redis:
   db: 0                  # 数据库索引
   keyPrefix: 'nest:'     # Key 前缀
   ttl: 3600              # 默认过期时间（秒）
+
+mongodb:
+  uri: mongodb://localhost:27017  # MongoDB 连接 URI
+  dbName: nest_db                 # 数据库名称
+  maxPoolSize: 10                 # 最大连接池大小
+  minPoolSize: 2                  # 最小连接池大小
+  serverSelectionTimeoutMS: 5000  # 服务器选择超时（毫秒）
+  socketTimeoutMS: 45000          # Socket 超时（毫秒）
+  connectTimeoutMS: 10000         # 连接超时（毫秒）
+  retryWrites: true               # 重试写入
+  retryReads: true                # 重试读取
 ```
 
 ### 配置取值规范
@@ -260,6 +312,33 @@ return await this.redisService.getOrSet('user:1', async () => {
   return await this.userRepository.findOne({ where: { id: 1 } });
 }, 600);
 ```
+
+### MongoDB 数据库
+
+项目已集成 MongoDB 数据库，使用 Mongoose 作为 ODM，详细使用说明请查看：[MongoDB 文档](docs/mongodb.md)
+
+**快速使用**：
+
+```typescript
+// 注入 LogService（示例）
+constructor(private readonly logService: LogService) {}
+
+// 创建日志
+await this.logService.create({
+  level: 'info',
+  message: '操作日志',
+  metadata: { action: 'create' },
+  userId: 'user123',
+});
+
+// 查询日志
+const logs = await this.logService.findByLevel('error');
+```
+
+**数据库选择**：
+- **MySQL (TypeORM)**: 关系型数据、事务密集型操作
+- **MongoDB (Mongoose)**: 文档型数据、日志记录、缓存等场景
+
 
 ### 添加新配置
 1. 在 `config.common.yml` 或环境配置文件中添加新的配置项

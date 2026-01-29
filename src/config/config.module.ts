@@ -11,6 +11,7 @@ import {
   scheduleConfig,
   swaggerConfig,
   redisConfig,
+  mongodbConfig,
 } from './configs';
 
 @Global()
@@ -27,6 +28,7 @@ import {
         scheduleConfig,
         swaggerConfig,
         redisConfig,
+        mongodbConfig,
       ],
       cache: true,
     }),

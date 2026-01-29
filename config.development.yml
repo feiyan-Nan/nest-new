@@ -52,3 +52,7 @@ redis:
   db: 0
   keyPrefix: 'nest:dev:'
   ttl: 3600
+
+# MongoDB 配置
+mongodb:
+  uri: mongodb://localhost:27017  # MongoDB 连接 URI

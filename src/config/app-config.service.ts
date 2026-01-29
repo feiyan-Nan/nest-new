@@ -10,6 +10,7 @@ import {
   IScheduleConfig,
   ISwaggerConfig,
   IRedisConfig,
+  IMongoDBConfig,
 } from './configs';
 
 @Injectable()
@@ -50,5 +51,9 @@ export class AppConfigService {
 
   get redis(): IRedisConfig {
     return this.configService.get<IRedisConfig>('redis')!;
+  }
+
+  get mongodb(): IMongoDBConfig {
+    return this.configService.get<IMongoDBConfig>('mongodb')!;
   }
 }

@@ -80,3 +80,17 @@ redis:
   db: 0                # 数据库索引
   keyPrefix: 'nest:'   # Key 前缀
   ttl: 3600            # 默认过期时间（秒）
+
+# MongoDB 配置
+mongodb:
+  uri: mongodb://localhost:27017  # MongoDB 连接 URI
+  dbName: nest_db                 # 数据库名称
+  useNewUrlParser: true           # 使用新的 URL 解析器
+  useUnifiedTopology: true        # 使用统一拓扑
+  maxPoolSize: 10                 # 最大连接池大小（开发环境：5-10，生产环境：10-50）
+  minPoolSize: 2                  # 最小连接池大小
+  serverSelectionTimeoutMS: 5000  # 服务器选择超时（毫秒）
+  socketTimeoutMS: 45000          # Socket 超时（毫秒）
+  connectTimeoutMS: 10000         # 连接超时（毫秒）
+  retryWrites: true               # 重试写入
+  retryReads: true                # 重试读取

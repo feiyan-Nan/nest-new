@@ -1,101 +1,128 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS 项目
 
-删除oss: https://help.aliyun.com/zh/oss/developer-reference/nodejs-delete-objects?spm=a2c4g.11186623.help-menu-31815.d_1_1_10_6_2_6.59b74105EUN8yT&scm=20140722.H_111408._.OR_help-T_cn~zh-V_1
+一个功能完整的 NestJS 应用，集成了 MySQL、Redis 和 MongoDB。
 
+## 快速开始
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+### 方式一：使用 Docker Compose（推荐）
 
 ```bash
-$ pnpm install
+# 1. 启动所有服务
+pnpm docker:up
+
+# 2. 启动应用
+pnpm start:docker
 ```
 
-## Compile and run the project
+访问: http://localhost:3000
+
+### 方式二：本地开发
 
 ```bash
-# development
-$ pnpm run start
+# 1. 安装依赖
+pnpm install
 
-# watch mode
-$ pnpm run start:dev
+# 2. 配置环境
+cp config.example.yml config.development.yml
+# 编辑 config.development.yml 配置数据库连接信息
 
-# production mode
-$ pnpm run start:prod
+# 3. 启动本地服务（MySQL、Redis、MongoDB）
+
+# 4. 启动应用
+pnpm start:dev
 ```
 
-## Run tests
+## 技术栈
+
+- **框架**: NestJS 11
+- **数据库**: MySQL 8.0 (TypeORM) + MongoDB 7 (Mongoose)
+- **缓存**: Redis 7
+- **日志**: Winston
+- **API 文档**: Swagger
+- **认证**: JWT
+- **构建工具**: SWC
+
+## 项目特性
+
+- ✅ TypeScript 严格模式
+- ✅ 多数据库支持（MySQL + MongoDB）
+- ✅ Redis 缓存系统
+- ✅ JWT 认证和授权
+- ✅ 全局异常处理
+- ✅ 请求日志记录
+- ✅ 健康检查
+- ✅ API 文档（Swagger）
+- ✅ Docker Compose 支持
+- ✅ 配置文件管理（YAML）
+
+## 目录结构
+
+```
+src/
+├── config/          # 配置模块
+├── database/        # MySQL/TypeORM
+├── mongodb/         # MongoDB/Mongoose
+├── redis/           # Redis 缓存
+├── logger/          # Winston 日志
+├── modules/         # 业务模块
+│   ├── auth/        # 认证模块
+│   └── users/       # 用户模块
+└── common/          # 公共模块
+```
+
+## 可用命令
 
 ```bash
-# unit tests
-$ pnpm run test
+# 开发
+pnpm start:dev       # 开发模式（热重载）
+pnpm start:docker    # Docker 环境
+pnpm build           # 构建项目
+pnpm start:prod      # 生产模式
 
-# e2e tests
-$ pnpm run test:e2e
+# Docker
+pnpm docker:up       # 启动服务
+pnpm docker:down     # 停止服务
+pnpm docker:ps       # 查看状态
+pnpm docker:logs     # 查看日志
 
-# test coverage
-$ pnpm run test:cov
+# 代码质量
+pnpm lint            # 代码检查
+pnpm format          # 代码格式化
+pnpm test            # 运行测试
 ```
 
-## Deployment
+## 服务端口
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| 应用 | 3000 | NestJS 应用 |
+| MySQL | 3306 | 关系型数据库 |
+| Redis | 6379 | 缓存服务 |
+| MongoDB | 27017 | 文档数据库 |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## API 文档
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
+启动应用后访问: http://localhost:3000/docs
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 文档
 
-## Resources
+- [Docker Compose 使用指南](DOCKER.md)
+- [MongoDB 集成文档](docs/mongodb.md)
+- [Redis 缓存文档](docs/redis-cache.md)
+- [项目开发指南](CLAUDE.md)
 
-Check out a few resources that may come in handy when working with NestJS:
+## 环境要求
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Node.js >= 18
+- pnpm >= 8
+- Docker & Docker Compose（可选）
 
-## Support
+## 资源
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- [NestJS 文档](https://docs.nestjs.com)
+- [NestJS Discord](https://discord.gg/G7Qnnhy)
+- [NestJS 官方课程](https://courses.nestjs.com/)
 
-## Stay in touch
+## 许可证
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+UNLICENSED

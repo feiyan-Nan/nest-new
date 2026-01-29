@@ -45,6 +45,11 @@ lerna-debug.log*
 # config files (环境配置文件包含敏感信息，不提交到 git)
 config.production.yml
 
+# Docker
+docker/mysql/data/
+docker/mongodb/data/
+docker/redis/data/
+
 # temp directory
 .temp
 .tmp

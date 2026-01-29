@@ -58,3 +58,14 @@ swagger:
   description: API Documentation  # API 描述
   version: '1.0'        # API 版本
   path: docs            # Swagger 访问路径
+
+# MongoDB 配置
+mongodb:
+  dbName: nest_db       # 数据库名称
+  maxPoolSize: 10       # 最大连接池大小
+  minPoolSize: 2        # 最小连接池大小
+  serverSelectionTimeoutMS: 5000   # 服务器选择超时（毫秒）
+  socketTimeoutMS: 45000           # Socket 超时（毫秒）
+  connectTimeoutMS: 10000          # 连接超时（毫秒）
+  retryWrites: true                # 重试写入
+  retryReads: true                 # 重试读取

@@ -1,0 +1,55 @@
+# Docker 环境配置
+# 使用 Docker Compose 启动的服务
+
+app:
+  env: development
+  port: 3000
+
+# 数据库配置（连接到 Docker 容器）
+database:
+  host: localhost  # 如果应用在 Docker 中，使用 nest-mysql
+  username: root
+  password: admin123
+  name: nest_db
+  sync: true
+  logging: true
+  pool:
+    connectionLimit: 10
+
+# JWT 配置
+jwt:
+  accessSecret: b8e001214798284d846f5863ff27f002af76ec8e75834c4b08e3c4ad8aeb621520a0919e152959cc0604536f6067b022a7ec1290060468b0d597ccfd6edb0116
+  accessExpires: 15m
+  refreshSecret: 89030422b243988b3a267bdba1adf72c5676b0b1f622b802ee1b049317c8f76ef73b5909bd2c96b459eaf2c7af053937901b14e802d866b06f00f11819e743e6
+  refreshExpires: 7d
+
+# CORS 配置
+cors:
+  origin:
+    - http://localhost:3000
+    - http://localhost:4200
+    - http://localhost:5173
+
+# 压缩配置
+compression:
+  enabled: false
+
+# 定时任务配置
+schedule:
+  cleanup:
+    enabled: false
+  health:
+    enabled: true
+
+# Redis 配置（连接到 Docker 容器）
+redis:
+  host: localhost  # 如果应用在 Docker 中，使用 nest-redis
+  port: 6379
+  password: ''
+  db: 0
+  keyPrefix: 'nest:docker:'
+  ttl: 3600
+
+# MongoDB 配置（连接到 Docker 容器）
+mongodb:
+  uri: mongodb://admin:admin123@localhost:27017/nest_db?authSource=admin  # 如果应用在 Docker 中，使用 nest-mongodb

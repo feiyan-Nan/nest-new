@@ -11,6 +11,7 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import { AppConfigModule } from '@/config/config.module';
 import { DatabaseModule } from '@/database/database.module';
+import { MongoDBModule } from '@/mongodb/mongodb.module';
 import { LoggerModule } from '@/logger';
 import { HealthModule } from '@/health/health.module';
 import { ScheduleTasksModule } from '@/schedule/schedule.module';
@@ -47,6 +48,7 @@ import { WinstonLoggerService } from '@/logger/winston-logger.service';
     AppConfigModule,
     LoggerModule,
     DatabaseModule,
+    MongoDBModule,
     RedisModule,
     HealthModule,
     ScheduleTasksModule,
