@@ -1,16 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { AppConfigService } from '@/config/app-config.service';
 import { DataSource } from 'typeorm';
 import { CronExpression } from '@nestjs/schedule/dist/enums/cron-expression.enum';
+import { WinstonLoggerService } from '@/logger';
 
 @Injectable()
 export class TasksService {
-  private readonly logger = new Logger(TasksService.name);
+  private readonly context = TasksService.name;
 
   constructor(
     private readonly configService: AppConfigService,
     private readonly dataSource: DataSource,
+    private readonly logger: WinstonLoggerService,
   ) {}
 
   @Cron('0 0 * * *', {
@@ -25,7 +27,7 @@ export class TasksService {
     }
 
     const startTime = Date.now();
-    this.logger.log('Starting cleanup old logs task...');
+    this.logger.log('Starting cleanup old logs task...', this.context);
 
     try {
       const retentionDays = config.cleanupLogs.retentionDays;
@@ -40,11 +42,14 @@ export class TasksService {
       const duration = Date.now() - startTime;
       this.logger.log(
         `Cleanup old logs completed in ${duration}ms, affected rows: ${result.affectedRows || 0}`,
+        this.context,
       );
     } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
       this.logger.error(
-        `Cleanup old logs task failed: ${error.message}`,
-        error.stack,
+        `Cleanup old logs task failed: ${err.message}`,
+        this.context,
+        { stack: err.stack },
       );
     }
   }
@@ -61,23 +66,26 @@ export class TasksService {
     }
 
     const startTime = Date.now();
-    this.logger.log('Starting health check task...');
+    this.logger.log('Starting health check task...', this.context);
 
     try {
       const dbHealthy = await this.checkDatabaseConnection();
 
       if (!dbHealthy) {
-        this.logger.warn('Database connection check failed');
+        this.logger.warn('Database connection check failed', this.context);
       }
 
       const duration = Date.now() - startTime;
       this.logger.log(
         `Health check completed in ${duration}ms, status: ${dbHealthy ? 'healthy' : 'unhealthy'}`,
+        this.context,
       );
     } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
       this.logger.error(
-        `Health check task failed: ${error.message}`,
-        error.stack,
+        `Health check task failed: ${err.message}`,
+        this.context,
+        { stack: err.stack },
       );
     }
   }
@@ -87,9 +95,11 @@ export class TasksService {
       await this.dataSource.query('SELECT 1');
       return true;
     } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
       this.logger.error(
-        `Database connection check failed: ${error.message}`,
-        error.stack,
+        `Database connection check failed: ${err.message}`,
+        this.context,
+        { stack: err.stack },
       );
       return false;
     }
