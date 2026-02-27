@@ -32,7 +32,7 @@ export class TasksService {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
 
-      const result = await this.dataSource.query(
+      const result: { affectedRows: number } = await this.dataSource.query(
         `DELETE FROM logs WHERE created_at < ?`,
         [cutoffDate],
       );
