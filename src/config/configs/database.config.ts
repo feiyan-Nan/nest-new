@@ -48,10 +48,16 @@ export default registerAs('database', (): IDatabaseConfig => {
       connectionLimit: getPoolConfig<number>('connectionLimit', 10),
       queueLimit: getPoolConfig<number>('queueLimit', 0),
       waitForConnections: getPoolConfig<boolean>('waitForConnections', true),
-      connectionTimeoutMillis: getPoolConfig<number>('connectionTimeoutMillis', 2000),
+      connectionTimeoutMillis: getPoolConfig<number>(
+        'connectionTimeoutMillis',
+        2000,
+      ),
       acquireTimeout: getPoolConfig<number>('acquireTimeout', 30000),
       idleTimeoutMillis: getPoolConfig<number>('idleTimeoutMillis', 60000),
-      maxQueryExecutionTime: getPoolConfig<number>('maxQueryExecutionTime', 60000),
+      maxQueryExecutionTime: getPoolConfig<number>(
+        'maxQueryExecutionTime',
+        60000,
+      ),
     },
   };
 });
