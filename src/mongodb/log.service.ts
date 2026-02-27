@@ -14,9 +14,7 @@ export interface CreateLogDto {
 
 @Injectable()
 export class LogService {
-  constructor(
-    @InjectModel(Log.name) private logModel: Model<LogDocument>,
-  ) {}
+  constructor(@InjectModel(Log.name) private logModel: Model<LogDocument>) {}
 
   /**
    * 创建日志
