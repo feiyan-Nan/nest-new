@@ -1,14 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type LogDocument = Log & Document;
+export type LogDocument = HydratedDocument<Log>;
 
 @Schema({
   timestamps: true, // 自动添加 createdAt 和 updatedAt
   collection: 'logs', // 集合名称
 })
 export class Log {
-  @Prop({ required: true })
+  @Prop({ required: true, enum: ['info', 'warn', 'error'] })
   level: string; // 日志级别：info, warn, error
 
   @Prop({ required: true })

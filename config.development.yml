@@ -55,4 +55,4 @@ redis:
 
 # MongoDB 配置
 mongodb:
-  uri: mongodb://localhost:27017  # MongoDB 连接 URI
+  uri: mongodb://admin:admin123@localhost:27017  # MongoDB 连接 URI

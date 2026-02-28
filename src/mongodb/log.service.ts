@@ -3,6 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Log, LogDocument } from './schemas/log.schema';
 
+export interface LogFilter {
+  level?: string;
+  userId?: string;
+  ip?: string;
+}
+
 export interface CreateLogDto {
   level: string;
   message: string;
@@ -39,15 +45,25 @@ export class LogService {
   /**
    * 根据级别查询日志
    */
-  async findByLevel(level: string): Promise<Log[]> {
-    return this.logModel.find({ level }).sort({ createdAt: -1 }).exec();
+  async findByLevel(level: string, page = 1, limit = 10): Promise<Log[]> {
+    return this.logModel
+      .find({ level })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
   }
 
   /**
    * 根据用户 ID 查询日志
    */
-  async findByUserId(userId: string): Promise<Log[]> {
-    return this.logModel.find({ userId }).sort({ createdAt: -1 }).exec();
+  async findByUserId(userId: string, page = 1, limit = 10): Promise<Log[]> {
+    return this.logModel
+      .find({ userId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
   }
 
   /**
@@ -70,7 +86,7 @@ export class LogService {
   /**
    * 统计日志数量
    */
-  async count(filter: any = {}): Promise<number> {
+  async count(filter: LogFilter = {}): Promise<number> {
     return this.logModel.countDocuments(filter).exec();
   }
 }
