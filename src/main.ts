@@ -60,6 +60,8 @@ async function bootstrap() {
   }
 
   await app.listen(port);
+  // Enable graceful shutdown hooks
+  app.enableShutdownHooks();
 
   const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   logger.log(
