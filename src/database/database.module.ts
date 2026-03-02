@@ -13,7 +13,7 @@ import { User, RefreshToken } from './entities';
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
   ],
-  providers: [DatabaseConfigService, UserRepository, RefreshTokenRepository],
-  exports: [DatabaseConfigService, UserRepository, RefreshTokenRepository],
+  providers: [UserRepository, RefreshTokenRepository],
+  exports: [UserRepository, RefreshTokenRepository],
 })
 export class DatabaseModule {}

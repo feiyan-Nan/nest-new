@@ -12,7 +12,7 @@ import { LogService } from './log.service';
     }),
     MongooseModule.forFeature([{ name: Log.name, schema: LogSchema }]),
   ],
-  providers: [MongoDBConfigService, LogService],
-  exports: [MongoDBConfigService, LogService],
+  providers: [LogService],
+  exports: [LogService],
 })
 export class MongoDBModule {}
