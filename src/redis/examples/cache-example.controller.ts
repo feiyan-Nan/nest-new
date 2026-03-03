@@ -1,9 +1,7 @@
-import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Public } from '@/modules/auth/decorators/public.decorator';
-import { RedisService } from '@/redis';
-import { Cacheable } from '@/redis/decorators/cacheable.decorator';
-import { CacheInterceptor } from '@/redis/interceptors/cache.interceptor';
+import { RedisService, Cached } from '@/redis';
 
 @ApiTags('缓存示例')
 @Controller('cache-example')
@@ -26,8 +24,7 @@ export class CacheExampleController {
 
   @Get('user/:id')
   @ApiOperation({ summary: '获取用户信息（带缓存）' })
-  @UseInterceptors(CacheInterceptor)
-  @Cacheable({ key: 'user:id', ttl: 300 })
+  @Cached({ key: 'user:id', ttl: 300 })
   async getUserWithCache(@Param('id') id: string) {
     // 模拟数据库查询延迟
     await new Promise((resolve) => setTimeout(resolve, 1000));
